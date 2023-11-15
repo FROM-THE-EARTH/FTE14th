@@ -13971,10 +13971,8 @@ by exp-lbrs.ulp</description>
 <part name="CON5" library="XR Connector" library_urn="urn:adsk.eagle:library:38467597" deviceset="2PIN" device="" package3d_urn="urn:adsk.eagle:package:38467599/3"/>
 <part name="GND37" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="CON1" library="XR Connector" library_urn="urn:adsk.eagle:library:38467597" deviceset="3PIN" device="" package3d_urn="urn:adsk.eagle:package:38467938/2"/>
-<part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="CON3" library="XR Connector" library_urn="urn:adsk.eagle:library:38467597" deviceset="3PIN" device="" package3d_urn="urn:adsk.eagle:package:38467938/2"/>
-<part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND26" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:23498/2" value="100"/>
@@ -14184,17 +14182,11 @@ by exp-lbrs.ulp</description>
 <instance part="CON1" gate="G$1" x="-121.92" y="416.56" smashed="yes">
 <attribute name="NAME" x="-124.46" y="421.64" size="1.27" layer="95"/>
 </instance>
-<instance part="P+4" gate="1" x="-119.38" y="401.32" smashed="yes" rot="R180">
-<attribute name="VALUE" x="-116.84" y="406.4" size="1.778" layer="96" rot="R270"/>
-</instance>
 <instance part="GND5" gate="1" x="-111.76" y="401.32" smashed="yes">
 <attribute name="VALUE" x="-114.3" y="398.78" size="1.778" layer="96"/>
 </instance>
 <instance part="CON3" gate="G$1" x="-149.86" y="416.56" smashed="yes">
 <attribute name="NAME" x="-152.4" y="421.64" size="1.27" layer="95"/>
-</instance>
-<instance part="P+5" gate="1" x="-147.32" y="401.32" smashed="yes" rot="R180">
-<attribute name="VALUE" x="-144.78" y="406.4" size="1.778" layer="96" rot="R270"/>
 </instance>
 <instance part="GND6" gate="1" x="-139.7" y="401.32" smashed="yes">
 <attribute name="VALUE" x="-142.24" y="398.78" size="1.778" layer="96"/>
@@ -14405,16 +14397,6 @@ by exp-lbrs.ulp</description>
 <wire x1="-142.24" y1="342.9" x2="-142.24" y2="347.98" width="0.1524" layer="91"/>
 <pinref part="P+2" gate="1" pin="+5V"/>
 <pinref part="C2" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<pinref part="CON1" gate="G$1" pin="P$2"/>
-<wire x1="-119.38" y1="414.02" x2="-119.38" y2="403.86" width="0.1524" layer="91"/>
-<pinref part="P+4" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<pinref part="CON3" gate="G$1" pin="P$2"/>
-<wire x1="-147.32" y1="414.02" x2="-147.32" y2="403.86" width="0.1524" layer="91"/>
-<pinref part="P+5" gate="1" pin="+5V"/>
 </segment>
 <segment>
 <pinref part="DCDC2" gate="G$1" pin="VIN"/>
@@ -14881,58 +14863,53 @@ by exp-lbrs.ulp</description>
 </net>
 <net name="BOARD-RX" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="D16"/>
-<wire x1="-462.28" y1="353.06" x2="-459.74" y2="353.06" width="0.1524" layer="91"/>
-<label x="-459.74" y="353.06" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
 <pinref part="U$7" gate="G$1" pin="D16"/>
 <wire x1="-482.6" y1="119.38" x2="-490.22" y2="119.38" width="0.1524" layer="91"/>
 <label x="-490.22" y="119.38" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
-</net>
-<net name="BOARD-TX" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="D15"/>
-<wire x1="-462.28" y1="347.98" x2="-459.74" y2="347.98" width="0.1524" layer="91"/>
-<label x="-459.74" y="347.98" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U$7" gate="G$1" pin="D15"/>
-<wire x1="-482.6" y1="124.46" x2="-490.22" y2="124.46" width="0.1524" layer="91"/>
-<label x="-490.22" y="124.46" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
-<net name="LED1.0" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="D7"/>
-<wire x1="-497.84" y1="353.06" x2="-500.38" y2="353.06" width="0.1524" layer="91"/>
-<label x="-500.38" y="353.06" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="R13" gate="G$1" pin="2"/>
-<wire x1="-408.94" y1="307.34" x2="-408.94" y2="304.8" width="0.1524" layer="91"/>
-<label x="-408.94" y="307.34" size="1.778" layer="95" rot="R90" xref="yes"/>
-</segment>
-</net>
-<net name="LED1.1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="D8"/>
 <wire x1="-497.84" y1="347.98" x2="-500.38" y2="347.98" width="0.1524" layer="91"/>
 <label x="-500.38" y="347.98" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
-<segment>
-<pinref part="R12" gate="G$1" pin="2"/>
-<wire x1="-401.32" y1="304.8" x2="-401.32" y2="307.34" width="0.1524" layer="91"/>
-<label x="-401.32" y="307.34" size="1.778" layer="95" rot="R90" xref="yes"/>
-</segment>
 </net>
-<net name="LED1.2" class="0">
+<net name="BOARD-TX" class="0">
+<segment>
+<pinref part="U$7" gate="G$1" pin="D15"/>
+<wire x1="-482.6" y1="124.46" x2="-490.22" y2="124.46" width="0.1524" layer="91"/>
+<label x="-490.22" y="124.46" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="D9"/>
 <wire x1="-497.84" y1="342.9" x2="-500.38" y2="342.9" width="0.1524" layer="91"/>
 <label x="-500.38" y="342.9" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
+</net>
+<net name="LED1.0" class="0">
+<segment>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="-408.94" y1="307.34" x2="-408.94" y2="304.8" width="0.1524" layer="91"/>
+<label x="-408.94" y="307.34" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="D16"/>
+<wire x1="-462.28" y1="353.06" x2="-454.66" y2="353.06" width="0.1524" layer="91"/>
+<label x="-454.66" y="353.06" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="LED1.1" class="0">
+<segment>
+<pinref part="R12" gate="G$1" pin="2"/>
+<wire x1="-401.32" y1="304.8" x2="-401.32" y2="307.34" width="0.1524" layer="91"/>
+<label x="-401.32" y="307.34" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="D15"/>
+<wire x1="-462.28" y1="347.98" x2="-454.66" y2="347.98" width="0.1524" layer="91"/>
+<label x="-454.66" y="347.98" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="LED1.2" class="0">
 <segment>
 <pinref part="R11" gate="G$1" pin="2"/>
 <wire x1="-393.7" y1="304.8" x2="-393.7" y2="307.34" width="0.1524" layer="91"/>
@@ -14969,6 +14946,18 @@ by exp-lbrs.ulp</description>
 <wire x1="-414.02" y1="167.64" x2="-393.7" y2="167.64" width="0.1524" layer="91"/>
 <pinref part="C4" gate="G$1" pin="1"/>
 <label x="-393.7" y="167.64" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CON3" gate="G$1" pin="P$2"/>
+<wire x1="-147.32" y1="414.02" x2="-147.32" y2="403.86" width="0.1524" layer="91"/>
+<label x="-147.32" y="403.86" size="1.778" layer="95" rot="R270" xref="yes"/>
+<label x="-147.32" y="403.86" size="1.778" layer="95" rot="R270" xref="yes"/>
+<label x="-147.32" y="403.86" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CON1" gate="G$1" pin="P$2"/>
+<wire x1="-119.38" y1="414.02" x2="-119.38" y2="403.86" width="0.1524" layer="91"/>
+<label x="-119.38" y="403.86" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="TX_GPS" class="0">
@@ -15121,6 +15110,13 @@ by exp-lbrs.ulp</description>
 <pinref part="R16" gate="G$1" pin="2"/>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <wire x1="-340.36" y1="109.22" x2="-337.82" y2="109.22" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="LED1.3" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="D14"/>
+<wire x1="-462.28" y1="342.9" x2="-454.66" y2="342.9" width="0.1524" layer="91"/>
+<label x="-454.66" y="342.9" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
