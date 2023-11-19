@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ラズパイカメラ付きラジコン</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script type="text/javascript" src="/webiopi.js"></script>
+<script type="text/javascript" src="motor.js"></script>
+</head>　　　　　　　　　　
+    <body>
+    <header>
+    <img src="http://ラズパイローカルIP/?action=stream"/>
+    </header>
+ <main>
+  
+    <ul>
+        <div class="a">
+            <li id="forward" class="ledoff"><br>前進</li>
+        </div>
+        <div class="bc">
+         <div class="b">
+          <li id="left" class="ledoff"><br>左旋回</li>
+         </div>
+         <div class="n">
+          <li></li>
+         </div>
+         <div class="c">
+          <li id="right" class="ledoff"><br>右旋回</li>
+         </div>
+        </div>
+         <div class="d">
+          <li id="backward" class="ledoff"><br>後退</li>
+        </div>
+    </ul>
+     
+</main>
+</body>
+</html>
