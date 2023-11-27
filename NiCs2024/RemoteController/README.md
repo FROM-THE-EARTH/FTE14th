@@ -23,3 +23,6 @@ sudo systemctl stop webiopi
 
 ifconfig
 ```
+## 4 参考サイト
+https://elchika.com/article/da0ba267-1f0d-4104-ace4-56edf804ebe4/
+https://nekonogorogoro.com/raspberrypi_car_vol2/
