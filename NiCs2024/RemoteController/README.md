@@ -6,11 +6,11 @@ sudo service webiopi start
 ```
 ## 2 web立ち上げ
 
-(http://ラズパイのローカルIP:8000/motor/motor.html)
+http://ラズパイのローカルIP:8000/motor/motor.html
 
 IPadressは使ってるwifiのもの
-name:webiopi
-pass:raspberry
+  - name:webiopi
+  - pass:raspberry
 
 
 ## 3 関連コマンド
