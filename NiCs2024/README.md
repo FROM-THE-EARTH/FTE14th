@@ -1,9 +1,9 @@
 # Raspberrypi関連
 
 ## 1.環境
-#### Bullseye 32bit Desktop
-#### hostname:raspberrypi
-#### username:karisora
+- Bullseye 32bit Desktop
+- hostname:raspberrypi
+- username:karisora
 
 
 ## 2.camera
