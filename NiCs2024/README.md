@@ -3,7 +3,8 @@
 ## 1.環境
 - Bullseye 32bit Desktop
 - hostname:raspberrypi
-- username:karisora
+- username:FTE
+- pass:FTE14
 
 
 ## 2.camera
