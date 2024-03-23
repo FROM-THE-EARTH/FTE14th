@@ -7,8 +7,7 @@ move_right : left-stick front and right-stick right
 move_left :  left-stick front and right-stick left
 stop : cross button
 
-2024/3/17  with NICs cansat contest
-FTE14th made by karisora
+FTE14th with NICs cansat contest
 """
 
 import serial
