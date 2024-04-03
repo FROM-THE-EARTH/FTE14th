@@ -4709,7 +4709,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="-28.8544" y="28.4226" size="0.9906" layer="27" ratio="10" rot="R180"/>
 </element>
 <element name="SW1" library="Sride Switch" library_urn="urn:adsk.eagle:library:38466661" package="SRIDE_SWITCH" package3d_urn="urn:adsk.eagle:package:38466664/3" override_package3d_urn="urn:adsk.eagle:package:38576639/2" override_package_urn="urn:adsk.eagle:footprint:38576640/1" value="SRIDE_SWITCH" x="22.86" y="44.45" smashed="yes" rot="R90">
-<attribute name="NAME" x="20.32" y="40.64" size="1.27" layer="21" rot="R90"/>
+<attribute name="NAME" x="20.193" y="40.767" size="1.27" layer="21" rot="R90"/>
 </element>
 <element name="U$1" library="arduinonano device" package="ARDUINONANO" value="ARDUINONANO" x="-34.29" y="-21.59" smashed="yes" rot="R45">
 <attribute name="NAME" x="-2.859103125" y="8.04484375" size="1.27" layer="21" rot="R45"/>
@@ -5149,9 +5149,8 @@ design rules under a new name.</description>
 <wire x1="-12.7" y1="-26.67" x2="6.35" y2="-7.62" width="1.016" layer="16"/>
 <wire x1="6.35" y1="-7.62" x2="6.35" y2="0" width="1.016" layer="16"/>
 <via x="6.35" y="0" extent="1-16" drill="0.35"/>
-<wire x1="6.35" y1="0" x2="6.35" y2="10.16" width="1.016" layer="1"/>
-<wire x1="6.35" y1="10.16" x2="30.48" y2="34.29" width="1.016" layer="1"/>
-<wire x1="30.48" y1="34.29" x2="30.48" y2="38.1" width="1.016" layer="1"/>
+<wire x1="6.35" y1="0" x2="30.48" y2="0" width="1.016" layer="1"/>
+<wire x1="30.48" y1="0" x2="30.48" y2="38.1" width="1.016" layer="1"/>
 <wire x1="30.48" y1="38.1" x2="13.97" y2="38.1" width="1.016" layer="1"/>
 </signal>
 <signal name="TX_GPS">
