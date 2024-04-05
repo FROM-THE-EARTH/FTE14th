@@ -2,30 +2,19 @@ import serial
 import time
 import math
 import threading
-import datetime
-import pigpio
-import csv
-import os
-import cv2
 import RPi.GPIO as GPIO
 import wiringpi as pi
 from library import BMX055
 from library import BMP085
 from micropyGPS import MicropyGPS
-from library import detect_corn as dc
-from picamera2 import Picamera2
-import matplotlib.pyplot as plt
 
-
-
-# 定数　上書きしない
+# constant value is capital
 MAG_CONST = 8.53  # 地磁気補正用の偏角
 CALIBRATION_MILLITIME = 20 * 1000
-TARGET_LAT = 38.26095359
+TARGET_LAT = 38.26095359 # target location
 TARGET_LNG = 140.85370900
-TARGET_ALTITUDE = 20
-DATA_SAMPLING_RATE = 0.00001
-SERVO_PIN = 13
+LAT = 0.0
+LNG = 0.0
 LED1 = 22
 LED2 = 26
 HIGH = 1
@@ -37,7 +26,6 @@ M4B = 24
 ROTATION_DIFF = 80
 MOTOR_COFFICIENT = 0.5
 
-# 変数
 acc = [0.0, 0.0, 0.0]
 gyro = [0.0, 0.0, 0.0]
 mag = [0.0, 0.0, 0.0]
@@ -45,9 +33,6 @@ calibBias = [0.0, 0.0]
 calibRange = [1.0, 1.0]
 lat = 0.0  # from GPS sensor
 lng = 0.0
-alt = 0.0
-altMax = 0.0
-pres = 0.0
 distance = 0
 angle = 0.0
 azimuth = 0.0
@@ -55,15 +40,9 @@ direction = 0.0
 frequency = 50
 phase = 0
 gps_detect = 0
-cone_direction = 0
-cone_probability = 0
 
 bmx = BMX055.BMX055()
-bmp = BMP085.BMP085()
-servo = pigpio.pi()
 
-nowTime = datetime.datetime.now()
-fileName = '/home/karisora/FTE14/NiCs2024/log/testlog_' + nowTime.strftime('%Y-%m%d-%H%M%S') + '.csv'
 
 
 def main():
@@ -74,72 +53,44 @@ def main():
 
     GPIO.setwarnings(False)
     Setup()
-    start = time.time()
     phase = 0
 
     while True:
-        if phase == 0:  # 投下
+        if phase == 0:
             print("phase0")
-            getBmpData()
+            time.sleep(2)
             phase = 1
-#             if alt < TARGET_ALTITUDE:
-#                 time.sleep(10)
-#                 phase = 1
-#             else:
-#                 phase = 0
 
-        elif phase == 1: # パラ分離
-            print("phase1")
-            servoMotor(90)
-            phase = 2
-
-        elif phase == 2:  # キャリブレーション
-            print("phase2")
+        elif phase == 1:
             calibration()
-            phase = 3
+            print("phase = 1 calibration OK")
+            if gps_detect == 1:
+                phase = 2
 
+        elif phase == 2:
+            print(direction)
+            time.sleep(0.1)
+            if distance < 5.0:
+                phase = 3
+                
         elif phase == 3:
-            print("phase3")
-            if distance < 5.0:  # GPS座標との距離 < m以内
-                phase = 4
-            else:
-                pass
-        elif phase == 4:
-            print("phase4 camera")
-            cone_detect()
-            if cone_probability < 1:
-                phase = 5
-            else:
-                direction = -400
-        elif phase == 5:
-            print("phase5")
-            cone_detect()
-            
-        elif phase == 6:
-            print("phase6")
-            time.sleep(10000)
-            
-        time.sleep(0.1)
-
-
+            print("phase3 stop")
+            print(lat)
+            print(lng)
+            time.sleep(100)
+        
 
 def currentMilliTime():
     return round(time.time() * 1000)
 
 
 def Setup():
-    global detector
     bmx.setUp()
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(LED1, GPIO.OUT)
     GPIO.setup(LED2, GPIO.OUT)
 
-
-    with open(fileName, 'a') as f:
-        writer = csv.writer(f)
-        writer.writerow(['MilliTime','Phase','AccX','AccY','AccZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ','LAT','LNG','ALT','Distance','Azimuth','Angle','Direction'])
-        
     getThread = threading.Thread(target=moveMotor_thread, args=())
     getThread.daemon = True
     getThread.setDaemon(True)
@@ -155,13 +106,6 @@ def Setup():
     gpsThread.setDaemon(True)
     gpsThread.start()
 
-
-    detector = dc.detector()
-    roi_img = cv2.imread("/home/karisora/FTE14/NiCs2024/library/roi_red_cone.png")
-    
-    roi_img = cv2.cvtColor(roi_img, cv2.COLOR_BGR2RGB)
-    detector.set_roi_img(roi_img)
-
     GPIO.output(LED2, HIGH)
     print("Setup OK")
 
@@ -175,13 +119,7 @@ def getBmxData():  # get BMX data
     mag = bmx.getMag()
     for i in range(2):
         mag[i] = (mag[i] - calibBias[i]) / calibRange[i]
-
-
-def getBmpData():
-    global alt
-    global pres
-    alt = bmp.read_altitude()
-    pres = bmp.read_pressure()
+    # print(mag)
 
 
 def calibration():  # calibrate BMX raw data
@@ -226,9 +164,12 @@ def calibration():  # calibrate BMX raw data
 def calcdistance():  # 距離計算用関
     global distance
     EARTH_RADIUS = 6378136.59
-    dx = (math.pi / 180) * EARTH_RADIUS * (TARGET_LNG - lng)
+    dx = (math.pi / 180) * EARTH_RADIUS * (TARGET_LNG - lng) 
     dy = (math.pi / 180) * EARTH_RADIUS * (TARGET_LAT - lat)
     distance = math.sqrt(dx * dx + dy * dy)
+    #print(distance)
+    #time.sleep(1)
+   
 
 
 def calcAngle():  # 角度計算用関数 : north=0 east=90 west = -90
@@ -236,7 +177,7 @@ def calcAngle():  # 角度計算用関数 : north=0 east=90 west = -90
     forEAstAngle = 0.0
     EARTH_RADIUS = 6378136.59
 
-    dx = (math.pi / 180) * EARTH_RADIUS * (TARGET_LNG - lng)
+    dx = (math.pi / 180) * EARTH_RADIUS * (TARGET_LNG - lng) 
     dy = (math.pi / 180) * EARTH_RADIUS * (TARGET_LAT - lat)
     if dx == 0 and dy == 0:
         forEastAngle = 0.0
@@ -248,7 +189,9 @@ def calcAngle():  # 角度計算用関数 : north=0 east=90 west = -90
     if angle > 180:
         angle -= 360
     angle = -angle
-
+        # change direction
+    # print(angle)
+    
 
 def calcAzimuth():  # 方位角計算用関数
     global azimuth
@@ -261,15 +204,8 @@ def calcAzimuth():  # 方位角計算用関数
     elif mag[0] < 0:
         azimuth = -90 + azimuth
     azimuth = - azimuth
-
-
-def servoMotor(angle):
-    assert 0 <= angle <= 180, '角度は0から180の間でなければなりません'
-
-    # 角度を500から2500のパルス幅にマッピングする
-    pulse_width = (angle / 180) * (2500 - 500) + 500
-    # パルス幅を設定してサーボを回転させる
-    servo.set_servo_pulsewidth(SERVO_PIN, pulse_width)
+    #print(azimuth)
+ 
 
 
 def LED_Checker(num):
@@ -280,44 +216,46 @@ def LED_Checker(num):
         time.sleep(0.1)
 
 
+
+
+# 引数はタイムゾーンの時差と出力フォーマット
+
 def GPS_thread():  # GPSモジュールを読み、GPSオブジェクトを更新する
     global lat
     global lng
+    global distance
     global gps_detect
-
+   
+    
     s = serial.Serial('/dev/ttyAMA0', 115200)
     s.readline()  # 最初の1行は中途半端なデーターが読めることがあるので、捨てる
     gps = MicropyGPS(9, 'dd')
 
     while True:
         sentence = s.readline().decode('utf-8')  # GPSデーターを読み、文字列に変換する
-
-        if s.in_waiting > 64: # バッファを削除
+        # flush buffer
+        if s.in_waiting > 64:
             s.reset_input_buffer()
+        # print(sentence)
         if sentence[0] != '$':  # 先頭が'$'でなければ捨てる
             continue
         for x in sentence:  # 読んだ文字列を解析してGPSオブジェクトにデーターを追加、更新する
             gps.update(x)
         lat = gps.latitude[0]
         lng = gps.longitude[0]
-
+        #h = gps.timestamp[0] if gps.timestamp[0] < 24 else gps.timestamp[0] - 24
+        #print('%02d:%02d:%04.1f' % (h, gps.timestamp[1], gps.timestamp[2]))
+        #print('lat= %2.8f, lng= %2.8f, alt= %f' % (gps.latitude[0], gps.longitude[0], gps.altitude))
+                
         if lat > 0:
             gps_detect = 1
         elif lat == 0.0:
             gps_detect = 0
-            
-def cone_detect():
-    global detector
-    global cone_direction
-    global cone_probability
        
-    
-    detector.detect_cone()
-    cone_direction = detector.cone_direction
-    cone_probability = detector.probability
+            
+   
 
-    
-
+   
 def setData_thread():
     while True:
         getBmxData()
@@ -325,10 +263,11 @@ def setData_thread():
         calcAzimuth()
         set_direction()
         calcdistance()
-        with open(fileName, 'a', newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow([currentMilliTime(), round(phase,1), acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[0], mag[1], mag[2], lat, lng, distance, azimuth, angle, direction])
-        time.sleep(DATA_SAMPLING_RATE)
+       
+        
+      
+
+        
 
 
 def moveMotor_thread():
@@ -377,55 +316,40 @@ def moveMotor_thread():
             M4A_pwm.ChangeDutyCycle(50 + MOTOR_COFFICIENT * 50)
             M4B_pwm.ChangeDutyCycle(0)
 
-
 def set_direction():  # -180<direction<180  #rover move to right while direction > 0
     global direction
     global phase
-
-    if phase == 0:  # 投下
+    
+    
+    if phase == 0:
         direction = 0
 
     elif phase == 1:
-        phase = 1
-
-    elif phase == 2:  # キャリブレーション
         direction = -400.0  # right
 
-    elif phase == 3:
-        if (angle - azimuth) > 180:
-            theta = angle - 360
-        elif (azimuth - angle) > 180:
-            theta = angle + 360
-        else:
-            theta = angle
-
-        direction = theta - azimuth
-
-        if abs(direction) < 5.0:
-            direction = -360.0
-        elif abs(direction) > 175.0:
-            direction = -360.0
-
-
-    elif phase == 4:
-        direction = -400.0
-        
-    elif phase == 5:
-        if cone_direction > 0.7:
-            direction = -180
-        elif cone_direction <= 0.7 and cone_direction >= 0.3:
-            direction = -360
-        elif cone_direction < 0.3:
-            direction = 180
-        if detector.is_reached:
-            direction = 360
-            phase = 6
-    
-        
-             
+    elif phase == 2:
+            if (angle - azimuth) > 180:
+                theta = angle - 360
+            elif (azimuth - angle) > 180:
+                theta = angle + 360
+            else:
+                theta = angle
+                
+            direction = theta - azimuth
             
+            if abs(direction) < 5.0:
+                direction = -360.0
+            elif abs(direction) > 175.0:
+                direction = -360.0
+
+
+    elif phase == 3:
+        direction = 360.0
+        
 
 
 if __name__ == '__main__':
+
     main()
     time.sleep(100)
+

@@ -6,17 +6,11 @@ import datetime
 import pigpio
 import csv
 import os
-import cv2
 import RPi.GPIO as GPIO
 import wiringpi as pi
 from library import BMX055
 from library import BMP085
 from micropyGPS import MicropyGPS
-from library import detect_corn as dc
-from picamera2 import Picamera2
-import matplotlib.pyplot as plt
-
-
 
 # 定数　上書きしない
 MAG_CONST = 8.53  # 地磁気補正用の偏角
@@ -55,8 +49,6 @@ direction = 0.0
 frequency = 50
 phase = 0
 gps_detect = 0
-cone_direction = 0
-cone_probability = 0
 
 bmx = BMX055.BMX055()
 bmp = BMP085.BMP085()
@@ -81,7 +73,6 @@ def main():
         if phase == 0:  # 投下
             print("phase0")
             getBmpData()
-            phase = 1
 #             if alt < TARGET_ALTITUDE:
 #                 time.sleep(10)
 #                 phase = 1
@@ -105,20 +96,10 @@ def main():
             else:
                 pass
         elif phase == 4:
-            print("phase4 camera")
-            cone_detect()
-            if cone_probability < 1:
-                phase = 5
-            else:
-                direction = -400
-        elif phase == 5:
-            print("phase5")
-            cone_detect()
-            
-        elif phase == 6:
-            print("phase6")
-            time.sleep(10000)
-            
+            print("phase4 stop")
+            print(lat)
+            print(lng)
+            time.sleep(100)
         time.sleep(0.1)
 
 
@@ -128,7 +109,6 @@ def currentMilliTime():
 
 
 def Setup():
-    global detector
     bmx.setUp()
 
     GPIO.setmode(GPIO.BCM)
@@ -154,13 +134,6 @@ def Setup():
     gpsThread.daemon = True
     gpsThread.setDaemon(True)
     gpsThread.start()
-
-
-    detector = dc.detector()
-    roi_img = cv2.imread("/home/karisora/FTE14/NiCs2024/library/roi_red_cone.png")
-    
-    roi_img = cv2.cvtColor(roi_img, cv2.COLOR_BGR2RGB)
-    detector.set_roi_img(roi_img)
 
     GPIO.output(LED2, HIGH)
     print("Setup OK")
@@ -305,18 +278,7 @@ def GPS_thread():  # GPSモジュールを読み、GPSオブジェクトを更�
             gps_detect = 1
         elif lat == 0.0:
             gps_detect = 0
-            
-def cone_detect():
-    global detector
-    global cone_direction
-    global cone_probability
-       
-    
-    detector.detect_cone()
-    cone_direction = detector.cone_direction
-    cone_probability = detector.probability
 
-    
 
 def setData_thread():
     while True:
@@ -408,22 +370,7 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
 
 
     elif phase == 4:
-        direction = -400.0
-        
-    elif phase == 5:
-        if cone_direction > 0.7:
-            direction = -180
-        elif cone_direction <= 0.7 and cone_direction >= 0.3:
-            direction = -360
-        elif cone_direction < 0.3:
-            direction = 180
-        if detector.is_reached:
-            direction = 360
-            phase = 6
-    
-        
-             
-            
+        direction = 360.0
 
 
 if __name__ == '__main__':
