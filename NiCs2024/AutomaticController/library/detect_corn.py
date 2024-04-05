@@ -65,20 +65,32 @@ class detector():
     # ラベリング処理によって, 特定の比の長方形 (i.e. カラーコーン) を探し, その重心と確からしさを返す
     # 確からしさ abs(長方形の縦横比 - コーンの縦横比) でとりあえず定義. 小さいほど良い
     def __find_cone_centroid(self):
+        error_val = 10000 # 不正な値
         imgSize = len(self.binarized_img) * len(self.binarized_img[0])
         nlabels, labels_img, stats, centroids = cv2.connectedComponentsWithStats(self.binarized_img.astype(np.uint8)) # バウンディングボックス取得
-        probabilities = np.abs(stats[:, cv2.CC_STAT_WIDTH] / stats[:, cv2.CC_STAT_HEIGHT] - self.cone_ratio)
-        # error if centroid of the img is black
+        probabilities = np.abs(stats[:, cv2.CC_STAT_WIDTH] / stats[:, cv2.CC_STAT_HEIGHT] - self.cone_ratio) # 値が0に近いほどコーンらしい形状 (>=0)
+        idx_cone = -1 # コーンの要素番号
+        
+        # 検出された領域をそれぞれ検討
         for idx in range(nlabels):
-            if self.binarized_img[int(centroids[idx][1]), int(centroids[idx][0])] == 0:
-                probabilities[idx] = 1000
-        # 最も形の領域を探す
-        idx_stable = np.argmin(probabilities)
-        self.detected = stats[idx_stable, :]
-        self.centroids = centroids[idx_stable]
-        self.probability = probabilities[idx_stable]
+            if stat[idx, cv2.CC_STAT_AREA] < imgSize / 20000: #　極度に面積が小さいものは不正 (閾値は要調整)
+                probabilities[idx] = error_val
+            elif self.binarized_img[int(centroids[idx][1]), int(centroids[idx][0])] == 0: # 画像中心部が黒なものは不正
+                probabilities[idx] = error_val
+            elif stat[idx, cv2.CC_STAT_AREA] > imgSize / 2: # 入力画像の半分以上を占めるなら (三角形なのでフルに表示されたとき) 検知
+                idx_cone = idx
+                self.is_reached = True
+        
+        if not idx_cone > 0: # もし見つからなかったら
+            self.is_reached = False
+            idx_cone = np.argmin(probabilities) # 最も形の領域を探す
+        
+        # 見つかったコーンの諸情報を入力
+        self.detected = stats[idx_cone, :]
+        self.centroids = centroids[idx_cone]
+        self.probability = probabilities[idx_cone]
         self.cone_direction = self.centroids[0] / self.binarized_img.shape[1] # right : 1, left : 0
-        self.is_reached = True if self.detected[cv2.CC_STAT_AREA] == imgSize and self.probability < 1000  else False
+        # self.is_reached = True if self.detected[cv2.CC_STAT_AREA] == imgSize and self.probability < error_val  else False
         
         # for i in range(len(stats)):
         #     if stats[i][cv2.CC_STAT_AREA] == imgSize: # 入力画像全体を長方形として検出してしまった場合
