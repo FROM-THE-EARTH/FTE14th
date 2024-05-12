@@ -25,6 +25,8 @@ TARGET_LAT = 38.26095359
 TARGET_LNG = 140.85370900
 TARGET_ALTITUDE = 20
 DATA_SAMPLING_RATE = 0.00001
+ALTITUDE_CONST1 = 30
+ALTITUDE_CONST2 = 5
 SERVO_PIN = 13
 LED1 = 22
 LED2 = 26
@@ -57,6 +59,7 @@ phase = 0
 gps_detect = 0
 cone_direction = 0
 cone_probability = 0
+restTime = 0.0
 
 bmx = BMX055.BMX055()
 bmp = BMP085.BMP085()
@@ -74,46 +77,49 @@ def main():
 
     GPIO.setwarnings(False)
     Setup()
-    start = time.time()
     phase = 0
 
     while True:
         if phase == 0:  # 投下
-            print("phase0")
-            getBmpData()
+            print("phase0 : falling")
+            start1 = time.time()
+            while True:
+                getBmpData()
+                restTime = time.time() - start1
+                if flying() == False:
+                    break
+                time.sleep(0.1)
             phase = 1
-#             if alt < TARGET_ALTITUDE:
-#                 time.sleep(10)
-#                 phase = 1
-#             else:
-#                 phase = 0
 
         elif phase == 1: # パラ分離
-            print("phase1")
+            print("phase1 : remove para")
             servoMotor(90)
             phase = 2
 
         elif phase == 2:  # キャリブレーション
-            print("phase2")
+            print("phase2 : calibration start")
             calibration()
             phase = 3
 
         elif phase == 3:
-            print("phase3")
+            print("phase3 : GPS start")
             if distance < 5.0:  # GPS座標との距離 < m以内
                 phase = 4
-            else:
-                pass
+
         elif phase == 4:
-            print("phase4 camera")
+            print("phase4 : camera start")
             cone_detect()
             if cone_probability < 1:
                 phase = 5
-            else:
-                direction = -400
+
         elif phase == 5:
             print("phase5")
+            start2 = time.time()
             cone_detect()
+            if detector.is_reached:
+                phase = 6
+            if time.time() - start2 > 3 * 60:
+                phase = 6
             
         elif phase == 6:
             print("phase6")
@@ -182,6 +188,22 @@ def getBmpData():
     global pres
     alt = bmp.read_altitude()
     pres = bmp.read_pressure()
+
+def flying(): #落下検知関数 :飛んでいるときはTrueを返し続ける
+    #この関数は何回も繰り返されることを想定
+    global maxAlt
+    global minAlt
+    if maxAlt < alt:
+        maxAlt = alt
+    if minAlt > alt:
+        minAlt = alt
+    subAlt = maxAlt-minAlt
+    absAlt = abs(alt-minAlt)
+
+    if subAlt > ALTITUDE_CONST1 and absAlt < ALTITUDE_CONST2 or restTime > 1*60:
+        return False
+    else:
+        True
 
 
 def calibration():  # calibrate BMX raw data
@@ -417,9 +439,9 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
             direction = -360
         elif cone_direction < 0.3:
             direction = 180
-        if detector.is_reached:
-            direction = 360
-            phase = 6
+
+    elif phase == 6:
+        direction = 360
     
         
              
