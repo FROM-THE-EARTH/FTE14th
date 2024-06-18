@@ -1,0 +1,24 @@
+[Eagle]
+Version="09 06 02"
+Platform="Windows"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibraryUrn="urn:adsk.eagle:library:210"
+UsedLibraryUrn="urn:adsk.eagle:library:325"
+UsedLibraryUrn="urn:adsk.eagle:library:334"
+UsedLibraryUrn="urn:adsk.eagle:library:371"
+UsedLibraryUrn="urn:adsk.eagle:library:38464354"
+UsedLibraryUrn="urn:adsk.eagle:library:40438287"
+UsedLibraryUrn="urn:adsk.eagle:library:40257735"
+UsedLibrary="C:/Users/hiroy/OneDrive/ドキュメント/EAGLE/libraries/atmega328p.lbr"
+
+[Win_1]
+Type="Control Panel"
+Number=0
+
+[Desktop]
+Screen="1920 1080"
+Window="Win_1"
