@@ -9271,160 +9271,6 @@ Source: 008-0260-0_E.pdf</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="ATmega328p-PU">
-<packages>
-<package name="ATMEGA328P-AU" urn="urn:adsk.eagle:footprint:44716552/1" locally_modified="yes">
-<description>32-QFP, 0.50 mm pitch, 5.00 mm span, 4.75 X 4.75 X 0.90 mm body
-&lt;p&gt;32-pin QFP package with 0.50 mm pitch, 5.00 mm lead span1 X 5.00 mm lead span2 with body size 4.75 X 4.75 X 0.90 mm&lt;/p&gt;</description>
-<circle x="-2.904" y="2.406" radius="0.25" width="0" layer="21"/>
-<wire x1="-2.4" y1="2.156" x2="-2.4" y2="2.4" width="0.12" layer="21"/>
-<wire x1="-2.4" y1="2.4" x2="-2.156" y2="2.4" width="0.12" layer="21"/>
-<wire x1="2.4" y1="2.156" x2="2.4" y2="2.4" width="0.12" layer="21"/>
-<wire x1="2.4" y1="2.4" x2="2.156" y2="2.4" width="0.12" layer="21"/>
-<wire x1="2.4" y1="-2.156" x2="2.4" y2="-2.4" width="0.12" layer="21"/>
-<wire x1="2.4" y1="-2.4" x2="2.156" y2="-2.4" width="0.12" layer="21"/>
-<wire x1="-2.4" y1="-2.156" x2="-2.4" y2="-2.4" width="0.12" layer="21"/>
-<wire x1="-2.4" y1="-2.4" x2="-2.156" y2="-2.4" width="0.12" layer="21"/>
-<wire x1="2.4" y1="-2.4" x2="-2.4" y2="-2.4" width="0.12" layer="51"/>
-<wire x1="-2.4" y1="-2.4" x2="-2.4" y2="2.4" width="0.12" layer="51"/>
-<wire x1="-2.4" y1="2.4" x2="2.4" y2="2.4" width="0.12" layer="51"/>
-<wire x1="2.4" y1="2.4" x2="2.4" y2="-2.4" width="0.12" layer="51"/>
-<smd name="PD3" x="-2.3846" y="1.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PD4" x="-2.3846" y="1.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="GND" x="-2.3846" y="0.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="VCC" x="-2.3846" y="0.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="GND2" x="-2.3846" y="-0.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="VCC2" x="-2.3846" y="-0.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PB6" x="-2.3846" y="-1.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PB7" x="-2.3846" y="-1.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PD5" x="-1.75" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PD6" x="-1.25" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PD7" x="-0.75" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB0CLKO" x="-0.25" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB1" x="0.25" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB2" x="0.75" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB3MOSI" x="1.25" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB4MISO" x="1.75" y="-2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PB5SCK" x="2.3846" y="-1.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="AVCC" x="2.3846" y="-1.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="ADC6" x="2.3846" y="-0.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="AREF" x="2.3846" y="-0.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="GND3" x="2.3846" y="0.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="ADC7" x="2.3846" y="0.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PC0" x="2.3846" y="1.25" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PC1" x="2.3846" y="1.75" dx="1.06" dy="0.304" layer="1"/>
-<smd name="PC2" x="1.75" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PC3" x="1.25" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PC4SDA" x="0.75" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PC5SCL" x="0.25" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PC6RESET" x="-0.25" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PD0RX" x="-0.75" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PD1TX" x="-1.25" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<smd name="PD2" x="-1.75" y="2.3846" dx="1.06" dy="0.304" layer="1" rot="R90"/>
-<text x="0" y="3.5496" size="1.27" layer="25" align="bottom-center">&gt;ATMEGA328P-AU</text>
-</package>
-</packages>
-<packages3d>
-<package3d name="QFP50P500X500X90-32N" urn="urn:adsk.eagle:package:44716433/1" type="model">
-<description>32-QFP, 0.50 mm pitch, 5.00 mm span, 4.75 X 4.75 X 0.90 mm body
-&lt;p&gt;32-pin QFP package with 0.50 mm pitch, 5.00 mm lead span1 X 5.00 mm lead span2 with body size 4.75 X 4.75 X 0.90 mm&lt;/p&gt;</description>
-<packageinstances>
-<packageinstance name="ATMEGA328P-AU"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="ATMEGA328P">
-<wire x1="0" y1="0" x2="0" y2="-83.82" width="0.254" layer="94"/>
-<wire x1="33.02" y1="-83.82" x2="33.02" y2="0" width="0.254" layer="94"/>
-<wire x1="0" y1="0" x2="33.02" y2="0" width="0.254" layer="94"/>
-<pin name="PC6RESET" x="-2.54" y="-5.08" length="middle"/>
-<pin name="PD0RX" x="-2.54" y="-10.16" length="middle"/>
-<pin name="PD1TX" x="-2.54" y="-15.24" length="middle"/>
-<pin name="PD2" x="-2.54" y="-20.32" length="middle"/>
-<pin name="PD3" x="-2.54" y="-25.4" length="middle"/>
-<pin name="PD4" x="-2.54" y="-30.48" length="middle"/>
-<pin name="VCC" x="-2.54" y="-35.56" length="middle"/>
-<pin name="GND" x="-2.54" y="-40.64" length="middle"/>
-<pin name="PB6" x="-2.54" y="-45.72" length="middle"/>
-<pin name="PB7" x="-2.54" y="-50.8" length="middle"/>
-<pin name="PD5" x="-2.54" y="-55.88" length="middle"/>
-<pin name="PD6" x="-2.54" y="-60.96" length="middle"/>
-<pin name="PD7" x="-2.54" y="-66.04" length="middle"/>
-<pin name="PB0" x="-2.54" y="-71.12" length="middle"/>
-<pin name="PC5SCL" x="35.56" y="-5.08" length="middle" rot="R180"/>
-<pin name="PC4SDA" x="35.56" y="-10.16" length="middle" rot="R180"/>
-<pin name="PC3" x="35.56" y="-15.24" length="middle" rot="R180"/>
-<pin name="PC2" x="35.56" y="-20.32" length="middle" rot="R180"/>
-<pin name="PC1" x="35.56" y="-25.4" length="middle" rot="R180"/>
-<pin name="PC0" x="35.56" y="-30.48" length="middle" rot="R180"/>
-<pin name="GND2" x="35.56" y="-35.56" length="middle" rot="R180"/>
-<pin name="AREF" x="35.56" y="-40.64" length="middle" rot="R180"/>
-<pin name="AVCC" x="35.56" y="-45.72" length="middle" rot="R180"/>
-<pin name="PB5" x="35.56" y="-50.8" length="middle" rot="R180"/>
-<pin name="PB4MISO" x="35.56" y="-55.88" length="middle" rot="R180"/>
-<pin name="PB3MOSI" x="35.56" y="-60.96" length="middle" rot="R180"/>
-<pin name="PB2" x="35.56" y="-66.04" length="middle" rot="R180"/>
-<pin name="PB1" x="35.56" y="-71.12" length="middle" rot="R180"/>
-<pin name="GND3" x="-2.54" y="-76.2" length="middle"/>
-<pin name="ADC6" x="35.56" y="-76.2" length="middle" rot="R180"/>
-<wire x1="0" y1="-83.82" x2="33.02" y2="-83.82" width="0.254" layer="94"/>
-<pin name="VCC2" x="-2.54" y="-81.28" length="middle"/>
-<pin name="ADC7" x="35.56" y="-81.28" length="middle" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="ATMEGA328P-AU">
-<gates>
-<gate name="G$1" symbol="ATMEGA328P" x="5.08" y="15.24"/>
-</gates>
-<devices>
-<device name="" package="ATMEGA328P-AU">
-<connects>
-<connect gate="G$1" pin="ADC6" pad="ADC6"/>
-<connect gate="G$1" pin="ADC7" pad="ADC7"/>
-<connect gate="G$1" pin="AREF" pad="AREF"/>
-<connect gate="G$1" pin="AVCC" pad="AVCC"/>
-<connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="GND2" pad="GND2"/>
-<connect gate="G$1" pin="GND3" pad="GND3"/>
-<connect gate="G$1" pin="PB0" pad="PB0CLKO"/>
-<connect gate="G$1" pin="PB1" pad="PB1"/>
-<connect gate="G$1" pin="PB2" pad="PB2"/>
-<connect gate="G$1" pin="PB3MOSI" pad="PB3MOSI"/>
-<connect gate="G$1" pin="PB4MISO" pad="PB4MISO"/>
-<connect gate="G$1" pin="PB5" pad="PB5SCK"/>
-<connect gate="G$1" pin="PB6" pad="PB6"/>
-<connect gate="G$1" pin="PB7" pad="PB7"/>
-<connect gate="G$1" pin="PC0" pad="PC0"/>
-<connect gate="G$1" pin="PC1" pad="PC1"/>
-<connect gate="G$1" pin="PC2" pad="PC2"/>
-<connect gate="G$1" pin="PC3" pad="PC3"/>
-<connect gate="G$1" pin="PC4SDA" pad="PC4SDA"/>
-<connect gate="G$1" pin="PC5SCL" pad="PC5SCL"/>
-<connect gate="G$1" pin="PC6RESET" pad="PC6RESET"/>
-<connect gate="G$1" pin="PD0RX" pad="PD0RX"/>
-<connect gate="G$1" pin="PD1TX" pad="PD1TX"/>
-<connect gate="G$1" pin="PD2" pad="PD2"/>
-<connect gate="G$1" pin="PD3" pad="PD3"/>
-<connect gate="G$1" pin="PD4" pad="PD4"/>
-<connect gate="G$1" pin="PD5" pad="PD5"/>
-<connect gate="G$1" pin="PD6" pad="PD6"/>
-<connect gate="G$1" pin="PD7" pad="PD7"/>
-<connect gate="G$1" pin="VCC" pad="VCC"/>
-<connect gate="G$1" pin="VCC2" pad="VCC2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:44716433/1"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="Tact switch" urn="urn:adsk.eagle:library:40248844">
 <packages>
 <package name="TVAF06-A020B-R" urn="urn:adsk.eagle:footprint:40248845/3" library_version="4">
@@ -10797,6 +10643,161 @@ by exp-lbrs.ulp</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="ATMAGA328P-AU">
+<packages>
+<package name="QFP80P900X900X120-32N" urn="urn:adsk.eagle:footprint:44744061/1" locally_modified="yes">
+<description>32-QFP, 0.80 mm pitch, 9.00 mm span, 7.00 X 7.00 X 1.20 mm body
+&lt;p&gt;32-pin QFP package with 0.80 mm pitch, 9.00 mm lead span1 X 9.00 mm lead span2 with body size 7.00 X 7.00 X 1.20 mm&lt;/p&gt;</description>
+<circle x="-4.2656" y="3.5775" radius="0.25" width="0" layer="21"/>
+<wire x1="-3.55" y1="3.3275" x2="-3.55" y2="3.55" width="0.12" layer="21"/>
+<wire x1="-3.55" y1="3.55" x2="-3.3275" y2="3.55" width="0.12" layer="21"/>
+<wire x1="3.55" y1="3.3275" x2="3.55" y2="3.55" width="0.12" layer="21"/>
+<wire x1="3.55" y1="3.55" x2="3.3275" y2="3.55" width="0.12" layer="21"/>
+<wire x1="3.55" y1="-3.3275" x2="3.55" y2="-3.55" width="0.12" layer="21"/>
+<wire x1="3.55" y1="-3.55" x2="3.3275" y2="-3.55" width="0.12" layer="21"/>
+<wire x1="-3.55" y1="-3.3275" x2="-3.55" y2="-3.55" width="0.12" layer="21"/>
+<wire x1="-3.55" y1="-3.55" x2="-3.3275" y2="-3.55" width="0.12" layer="21"/>
+<wire x1="3.55" y1="-3.55" x2="-3.55" y2="-3.55" width="0.12" layer="51"/>
+<wire x1="-3.55" y1="-3.55" x2="-3.55" y2="3.55" width="0.12" layer="51"/>
+<wire x1="-3.55" y1="3.55" x2="3.55" y2="3.55" width="0.12" layer="51"/>
+<wire x1="3.55" y1="3.55" x2="3.55" y2="-3.55" width="0.12" layer="51"/>
+<smd name="PD3" x="-4.1813" y="2.8" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PD4" x="-4.1813" y="2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="GND" x="-4.1813" y="1.2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="VCC" x="-4.1813" y="0.4" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="GND2" x="-4.1813" y="-0.4" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="VCC2" x="-4.1813" y="-1.2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PB6" x="-4.1813" y="-2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PB7" x="-4.1813" y="-2.8" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PD5" x="-2.8" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PD6" x="-2" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PD7" x="-1.2" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB0" x="-0.4" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB1" x="0.4" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB2SS" x="1.2" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB3MOSI" x="2" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB4MISO" x="2.8" y="-4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PB5" x="4.1813" y="-2.8" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="AVCC" x="4.1813" y="-2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="ADC6" x="4.1813" y="-1.2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="AREF" x="4.1813" y="-0.4" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="GND3" x="4.1813" y="0.4" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="ADC7" x="4.1813" y="1.2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PC0" x="4.1813" y="2" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PC1" x="4.1813" y="2.8" dx="1.5998" dy="0.5471" layer="1"/>
+<smd name="PC2" x="2.8" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PC3" x="2" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PC4SDA" x="1.2" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PC5SCL" x="0.4" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PC6RESET" x="-0.4" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PD0RX" x="-1.2" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PD1TX" x="-2" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<smd name="PD2" x="-2.8" y="4.1813" dx="1.5998" dy="0.5471" layer="1" rot="R90"/>
+<text x="0" y="5.6162" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-5.6162" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
+</package>
+</packages>
+<packages3d>
+<package3d name="QFP80P900X900X120-32N" urn="urn:adsk.eagle:package:44744060/1" type="model">
+<description>32-QFP, 0.80 mm pitch, 9.00 mm span, 7.00 X 7.00 X 1.20 mm body
+&lt;p&gt;32-pin QFP package with 0.80 mm pitch, 9.00 mm lead span1 X 9.00 mm lead span2 with body size 7.00 X 7.00 X 1.20 mm&lt;/p&gt;</description>
+<packageinstances>
+<packageinstance name="QFP80P900X900X120-32N"/>
+</packageinstances>
+</package3d>
+</packages3d>
+<symbols>
+<symbol name="ATMEGA328P">
+<wire x1="0" y1="0" x2="0" y2="-83.82" width="0.254" layer="94"/>
+<wire x1="33.02" y1="-83.82" x2="33.02" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="33.02" y2="0" width="0.254" layer="94"/>
+<pin name="PC6RESET" x="-2.54" y="-5.08" length="middle"/>
+<pin name="PD0RX" x="-2.54" y="-10.16" length="middle"/>
+<pin name="PD1TX" x="-2.54" y="-15.24" length="middle"/>
+<pin name="PD2" x="-2.54" y="-20.32" length="middle"/>
+<pin name="PD3" x="-2.54" y="-25.4" length="middle"/>
+<pin name="PD4" x="-2.54" y="-30.48" length="middle"/>
+<pin name="VCC" x="-2.54" y="-35.56" length="middle"/>
+<pin name="GND" x="-2.54" y="-40.64" length="middle"/>
+<pin name="PB6" x="-2.54" y="-45.72" length="middle"/>
+<pin name="PB7" x="-2.54" y="-50.8" length="middle"/>
+<pin name="PD5" x="-2.54" y="-55.88" length="middle"/>
+<pin name="PD6" x="-2.54" y="-60.96" length="middle"/>
+<pin name="PD7" x="-2.54" y="-66.04" length="middle"/>
+<pin name="PB0" x="-2.54" y="-71.12" length="middle"/>
+<pin name="PC5SCL" x="35.56" y="-5.08" length="middle" rot="R180"/>
+<pin name="PC4SDA" x="35.56" y="-10.16" length="middle" rot="R180"/>
+<pin name="PC3" x="35.56" y="-15.24" length="middle" rot="R180"/>
+<pin name="PC2" x="35.56" y="-20.32" length="middle" rot="R180"/>
+<pin name="PC1" x="35.56" y="-25.4" length="middle" rot="R180"/>
+<pin name="PC0" x="35.56" y="-30.48" length="middle" rot="R180"/>
+<pin name="GND2" x="35.56" y="-35.56" length="middle" rot="R180"/>
+<pin name="AREF" x="35.56" y="-40.64" length="middle" rot="R180"/>
+<pin name="AVCC" x="35.56" y="-45.72" length="middle" rot="R180"/>
+<pin name="PB5" x="35.56" y="-50.8" length="middle" rot="R180"/>
+<pin name="PB4MISO" x="35.56" y="-55.88" length="middle" rot="R180"/>
+<pin name="PB3MOSI" x="35.56" y="-60.96" length="middle" rot="R180"/>
+<pin name="PB2" x="35.56" y="-66.04" length="middle" rot="R180"/>
+<pin name="PB1" x="35.56" y="-71.12" length="middle" rot="R180"/>
+<pin name="GND3" x="-2.54" y="-76.2" length="middle"/>
+<pin name="ADC6" x="35.56" y="-76.2" length="middle" rot="R180"/>
+<wire x1="0" y1="-83.82" x2="33.02" y2="-83.82" width="0.254" layer="94"/>
+<pin name="VCC2" x="-2.54" y="-81.28" length="middle"/>
+<pin name="ADC7" x="35.56" y="-81.28" length="middle" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="ATMEGA328P-AU">
+<gates>
+<gate name="G$1" symbol="ATMEGA328P" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="QFP80P900X900X120-32N">
+<connects>
+<connect gate="G$1" pin="ADC6" pad="ADC6"/>
+<connect gate="G$1" pin="ADC7" pad="ADC7"/>
+<connect gate="G$1" pin="AREF" pad="AREF"/>
+<connect gate="G$1" pin="AVCC" pad="AVCC"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="GND2" pad="GND2"/>
+<connect gate="G$1" pin="GND3" pad="GND3"/>
+<connect gate="G$1" pin="PB0" pad="PB0"/>
+<connect gate="G$1" pin="PB1" pad="PB1"/>
+<connect gate="G$1" pin="PB2" pad="PB2SS"/>
+<connect gate="G$1" pin="PB3MOSI" pad="PB3MOSI"/>
+<connect gate="G$1" pin="PB4MISO" pad="PB4MISO"/>
+<connect gate="G$1" pin="PB5" pad="PB5"/>
+<connect gate="G$1" pin="PB6" pad="PB6"/>
+<connect gate="G$1" pin="PB7" pad="PB7"/>
+<connect gate="G$1" pin="PC0" pad="PC0"/>
+<connect gate="G$1" pin="PC1" pad="PC1"/>
+<connect gate="G$1" pin="PC2" pad="PC2"/>
+<connect gate="G$1" pin="PC3" pad="PC3"/>
+<connect gate="G$1" pin="PC4SDA" pad="PC4SDA"/>
+<connect gate="G$1" pin="PC5SCL" pad="PC5SCL"/>
+<connect gate="G$1" pin="PC6RESET" pad="PC6RESET"/>
+<connect gate="G$1" pin="PD0RX" pad="PD0RX"/>
+<connect gate="G$1" pin="PD1TX" pad="PD1TX"/>
+<connect gate="G$1" pin="PD2" pad="PD2"/>
+<connect gate="G$1" pin="PD3" pad="PD3"/>
+<connect gate="G$1" pin="PD4" pad="PD4"/>
+<connect gate="G$1" pin="PD5" pad="PD5"/>
+<connect gate="G$1" pin="PD6" pad="PD6"/>
+<connect gate="G$1" pin="PD7" pad="PD7"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+<connect gate="G$1" pin="VCC2" pad="VCC2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:44744060/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -10807,7 +10808,7 @@ by exp-lbrs.ulp</description>
 </class>
 </classes>
 <parts>
-<part name="U$1" library="ATmega328p-PU" deviceset="ATMEGA328P-AU" device="" package3d_urn="urn:adsk.eagle:package:44716433/1"/>
+<part name="U$1" library="ATMAGA328P-AU" deviceset="ATMEGA328P-AU" device="" package3d_urn="urn:adsk.eagle:package:44744060/1"/>
 <part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10k"/>
 <part name="Q1" library="crystal" library_urn="urn:adsk.eagle:library:204" deviceset="CRYSTAL" device="HC49UP" package3d_urn="urn:adsk.eagle:package:12078/1" value="16mhz"/>
 <part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C1608" package3d_urn="urn:adsk.eagle:package:23621/2" value="22p"/>
