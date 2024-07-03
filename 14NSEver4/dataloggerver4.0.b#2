@@ -1583,26 +1583,35 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 </package3d>
 </packages3d>
 </library>
-<library name="PinSocket" urn="urn:adsk.eagle:library:40257735">
+<library name="pin_socket">
 <packages>
-<package name="1X5" urn="urn:adsk.eagle:footprint:40438280/1" library_version="6">
-<pad name="P$1" x="0" y="0" drill="0.8"/>
-<pad name="P$2" x="2.54" y="0" drill="0.8"/>
-<pad name="P$3" x="5.08" y="0" drill="0.8"/>
-<pad name="P$4" x="7.62" y="0" drill="0.8"/>
-<pad name="P$5" x="10.16" y="0" drill="0.8"/>
-<wire x1="-1.27" y1="1.27" x2="11.43" y2="1.27" width="0.1524" layer="21"/>
-<wire x1="11.43" y1="1.27" x2="11.43" y2="-1.27" width="0.1524" layer="21"/>
-<wire x1="11.43" y1="-1.27" x2="-1.27" y2="-1.27" width="0.1524" layer="21"/>
-<wire x1="-1.27" y1="-1.27" x2="-1.27" y2="1.27" width="0.1524" layer="21"/>
-<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+<package name="HDRVR5W64P254_1X5_1310X250X865B" urn="urn:adsk.eagle:footprint:44791102/1">
+<description>Single-row, 5-pin Receptacle Header (Female) Straight, 2.54 mm (0.10 in) col pitch, 8.65 mm insulator length, 13.10 X 2.50 X 8.65 mm body
+&lt;p&gt;Single-row (1X5), 5-pin Receptacle Header (Female) Straight package with 2.54 mm (0.10 in) col pitch, 0.64 mm lead width, 3.20 mm tail length and 8.65 mm insulator length with overall size 13.10 X 2.50 X 8.65 mm, pin pattern - clockwise from top left&lt;/p&gt;</description>
+<circle x="0" y="1.754" radius="0.25" width="0" layer="21"/>
+<wire x1="11.63" y1="-1.25" x2="-1.47" y2="-1.25" width="0.12" layer="21"/>
+<wire x1="-1.47" y1="-1.25" x2="-1.47" y2="1.25" width="0.12" layer="21"/>
+<wire x1="-1.47" y1="1.25" x2="11.63" y2="1.25" width="0.12" layer="21"/>
+<wire x1="11.63" y1="1.25" x2="11.63" y2="-1.25" width="0.12" layer="21"/>
+<wire x1="11.63" y1="-1.325" x2="-1.47" y2="-1.325" width="0.12" layer="51"/>
+<wire x1="-1.47" y1="-1.325" x2="-1.47" y2="1.325" width="0.12" layer="51"/>
+<wire x1="-1.47" y1="1.325" x2="11.63" y2="1.325" width="0.12" layer="51"/>
+<wire x1="11.63" y1="1.325" x2="11.63" y2="-1.325" width="0.12" layer="51"/>
+<pad name="1" x="0" y="0" drill="1.1051" diameter="1.7051"/>
+<pad name="2" x="2.54" y="0" drill="1.1051" diameter="1.7051"/>
+<pad name="3" x="5.08" y="0" drill="1.1051" diameter="1.7051"/>
+<pad name="4" x="7.62" y="0" drill="1.1051" diameter="1.7051"/>
+<pad name="5" x="10.16" y="0" drill="1.1051" diameter="1.7051"/>
+<text x="0" y="2.639" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-1.96" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
 </package>
 </packages>
 <packages3d>
-<package3d name="1X5" urn="urn:adsk.eagle:package:40438282/2" type="model" library_version="6">
+<package3d name="HDRVR5W64P254_1X5_1310X250X865B" urn="urn:adsk.eagle:package:44791100/1" type="model">
+<description>Single-row, 5-pin Receptacle Header (Female) Straight, 2.54 mm (0.10 in) col pitch, 8.65 mm insulator length, 13.10 X 2.50 X 8.65 mm body
+&lt;p&gt;Single-row (1X5), 5-pin Receptacle Header (Female) Straight package with 2.54 mm (0.10 in) col pitch, 0.64 mm lead width, 3.20 mm tail length and 8.65 mm insulator length with overall size 13.10 X 2.50 X 8.65 mm, pin pattern - clockwise from top left&lt;/p&gt;</description>
 <packageinstances>
-<packageinstance name="1X5"/>
+<packageinstance name="HDRVR5W64P254_1X5_1310X250X865B"/>
 </packageinstances>
 </package3d>
 </packages3d>
@@ -2036,9 +2045,9 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <attribute name="NAME" x="48.9938" y="15.24" size="1.27" layer="25" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="60.2262" y="15.24" size="1.27" layer="27" rot="R90" align="top-center"/>
 </element>
-<element name="U$2" library="PinSocket" library_urn="urn:adsk.eagle:library:40257735" package="1X5" package3d_urn="urn:adsk.eagle:package:40438282/2" value="1X5" x="24.13" y="11.43" smashed="yes" rot="R270">
-<attribute name="NAME" x="25.4" y="12.7" size="1.27" layer="25" rot="R270"/>
-<attribute name="VALUE" x="21.59" y="12.7" size="1.27" layer="27" rot="R270"/>
+<element name="U$2" library="pin_socket" package="HDRVR5W64P254_1X5_1310X250X865B" package3d_urn="urn:adsk.eagle:package:44791100/1" value="1X5" x="-81.28" y="-49.53" smashed="yes">
+<attribute name="NAME" x="-81.28" y="-46.891" size="1.27" layer="25" align="bottom-center"/>
+<attribute name="VALUE" x="-81.28" y="-51.49" size="1.27" layer="27" align="top-center"/>
 </element>
 </elements>
 <signals>
@@ -2069,8 +2078,8 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <contactref element="JP6" pad="1"/>
 <contactref element="R16" pad="1"/>
 <contactref element="JP7" pad="4"/>
-<contactref element="U$2" pad="P$1"/>
-<wire x1="8.89" y1="-5.08" x2="24.13" y2="11.43" width="0" layer="19" extent="1-1"/>
+<contactref element="U$2" pad="1"/>
+<wire x1="8.89" y1="-5.08" x2="-81.28" y2="-49.53" width="0" layer="19" extent="1-1"/>
 <wire x1="10.81" y1="5.16" x2="8.89" y2="-5.08" width="0" layer="19" extent="1-1"/>
 <wire x1="10.81" y1="15.32" x2="10.81" y2="5.16" width="0" layer="19" extent="1-1"/>
 <wire x1="3.81" y1="12.7" x2="10.81" y2="15.32" width="0" layer="19" extent="1-1"/>
@@ -2165,8 +2174,8 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <vertex x="72.39" y="-24.13"/>
 <vertex x="69.85" y="-26.67"/>
 </polygon>
-<contactref element="U$2" pad="P$2"/>
-<wire x1="11.43" y1="-5.08" x2="24.13" y2="8.89" width="0" layer="19" extent="1-1"/>
+<contactref element="U$2" pad="2"/>
+<wire x1="11.43" y1="-5.08" x2="-78.74" y2="-49.53" width="0" layer="19" extent="1-1"/>
 <wire x1="21.67" y1="4.89" x2="11.43" y2="-5.08" width="0" layer="19" extent="1-1"/>
 <wire x1="30.55" y1="11.0587" x2="21.67" y2="4.89" width="0" layer="19" extent="1-1"/>
 <wire x1="32.15" y1="11.0587" x2="30.55" y2="11.0587" width="0" layer="19" extent="1-1"/>
@@ -2328,18 +2337,18 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 </signal>
 <signal name="RESET">
 <contactref element="C3" pad="2"/>
-<contactref element="U$2" pad="P$3"/>
-<wire x1="59.69" y1="-10.58" x2="24.13" y2="6.35" width="0" layer="19" extent="1-1"/>
+<contactref element="U$2" pad="3"/>
+<wire x1="59.69" y1="-10.58" x2="-76.2" y2="-49.53" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RX">
 <contactref element="U$1" pad="PD0RX"/>
-<contactref element="U$2" pad="P$4"/>
-<wire x1="27.5687" y1="14.04" x2="24.13" y2="3.81" width="0" layer="19" extent="1-1"/>
+<contactref element="U$2" pad="4"/>
+<wire x1="27.5687" y1="14.04" x2="-73.66" y2="-49.53" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="TX">
 <contactref element="U$1" pad="PD1TX"/>
-<contactref element="U$2" pad="P$5"/>
-<wire x1="27.5687" y1="13.24" x2="24.13" y2="1.27" width="0" layer="19" extent="1-1"/>
+<contactref element="U$2" pad="5"/>
+<wire x1="27.5687" y1="13.24" x2="-71.12" y2="-49.53" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="BORD2">
 <contactref element="U$1" pad="PD2"/>
