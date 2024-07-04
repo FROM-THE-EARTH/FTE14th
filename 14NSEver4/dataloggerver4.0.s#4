@@ -10247,7 +10247,7 @@ Source: 008-0260-0_E.pdf</description>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0.4064" drill="0">
+<class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
 <parts>
@@ -11344,6 +11344,13 @@ Source: 008-0260-0_E.pdf</description>
 <label x="363.22" y="93.98" size="1.778" layer="95" rot="R270" xref="yes"/>
 <pinref part="U$3" gate="G$1" pin="PD6"/>
 </segment>
+<segment>
+<wire x1="505.46" y1="68.58" x2="505.46" y2="63.5" width="0.1524" layer="91"/>
+<label x="505.46" y="63.5" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="JP6" gate="A" pin="4"/>
+<wire x1="502.92" y1="78.74" x2="502.92" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="502.92" y1="68.58" x2="505.46" y2="68.58" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="GPSTX" class="0">
 <segment>
@@ -11355,13 +11362,6 @@ Source: 008-0260-0_E.pdf</description>
 <label x="500.38" y="63.5" size="1.778" layer="95" rot="R270" xref="yes"/>
 <pinref part="JP6" gate="A" pin="3"/>
 <wire x1="500.38" y1="78.74" x2="500.38" y2="63.5" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<wire x1="505.46" y1="68.58" x2="505.46" y2="63.5" width="0.1524" layer="91"/>
-<label x="505.46" y="63.5" size="1.778" layer="95" rot="R270" xref="yes"/>
-<pinref part="JP6" gate="A" pin="4"/>
-<wire x1="502.92" y1="78.74" x2="502.92" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="502.92" y1="68.58" x2="505.46" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="LED1.0" class="0">

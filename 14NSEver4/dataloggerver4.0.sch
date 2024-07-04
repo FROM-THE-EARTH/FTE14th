@@ -11590,6 +11590,23 @@ Source: 008-0260-0_E.pdf</description>
 <label x="289.56" y="73.66" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
+<net name="VCCIO1" class="0">
+<segment>
+<pinref part="BMX2" gate="G$1" pin="VCCIO"/>
+<wire x1="515.62" y1="177.8" x2="515.62" y2="176.53" width="0.1524" layer="91"/>
+<wire x1="515.62" y1="176.53" x2="504.19" y2="176.53" width="0.1524" layer="91"/>
+<label x="515.62" y="177.8" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="3V31" class="0">
+<segment>
+<pinref part="BMX2" gate="G$1" pin="3V3"/>
+<wire x1="504.19" y1="173.99" x2="504.19" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="504.19" y1="172.72" x2="510.54" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="513.08" y1="172.72" x2="510.54" y2="172.72" width="0.1524" layer="91"/>
+<label x="513.08" y="172.72" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
