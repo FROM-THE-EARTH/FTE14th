@@ -2224,6 +2224,32 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <via x="2.286" y="8.89" extent="1-16" drill="0.35"/>
 <via x="35.56" y="6.35" extent="1-16" drill="0.35"/>
 <via x="65.024" y="18.669" extent="1-16" drill="0.35"/>
+<via x="-0.254" y="20.32" extent="1-16" drill="0.35"/>
+<via x="-0.254" y="12.7" extent="1-16" drill="0.35"/>
+<via x="-0.254" y="6.35" extent="1-16" drill="0.35"/>
+<via x="16.256" y="0" extent="1-16" drill="0.35"/>
+<via x="4.826" y="1.27" extent="1-16" drill="0.35"/>
+<via x="12.446" y="17.78" extent="1-16" drill="0.35"/>
+<via x="9.906" y="10.16" extent="1-16" drill="0.35"/>
+<via x="28.956" y="17.78" extent="1-16" drill="0.35"/>
+<via x="50.546" y="25.4" extent="1-16" drill="0.35"/>
+<via x="8.509" y="25.654" extent="1-16" drill="0.35"/>
+<via x="20.066" y="25.654" extent="1-16" drill="0.35"/>
+<via x="63.246" y="-0.127" extent="1-16" drill="0.35"/>
+<via x="39.624" y="-0.127" extent="1-16" drill="0.35"/>
+<via x="75.438" y="0.381" extent="1-16" drill="0.35"/>
+<via x="79.502" y="6.604" extent="1-16" drill="0.35"/>
+<via x="80.264" y="11.938" extent="1-16" drill="0.35"/>
+<via x="80.01" y="20.447" extent="1-16" drill="0.35"/>
+<via x="73.406" y="24.892" extent="1-16" drill="0.35"/>
+<via x="70.358" y="19.05" extent="1-16" drill="0.35"/>
+<via x="72.898" y="16.256" extent="1-16" drill="0.35"/>
+<via x="36.068" y="12.192" extent="1-16" drill="0.35"/>
+<via x="58.293" y="10.541" extent="1-16" drill="0.35"/>
+<via x="61.214" y="12.573" extent="1-16" drill="0.35"/>
+<via x="45.466" y="25.4" extent="1-16" drill="0.35"/>
+<via x="44.196" y="19.05" extent="1-16" drill="0.35"/>
+<via x="69.596" y="25.4" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="+3V3">
 <contactref element="BMP1" pad="P1"/>

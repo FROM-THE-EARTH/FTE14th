@@ -2212,7 +2212,6 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <via x="67.31" y="8.382" extent="1-16" drill="0.35"/>
 <via x="52.578" y="10.16" extent="1-16" drill="0.35"/>
 <via x="54.102" y="9.779" extent="1-16" drill="0.35"/>
-<via x="49.403" y="12.7" extent="1-16" drill="0.35"/>
 <via x="48.133" y="14.986" extent="1-16" drill="0.35"/>
 <via x="53.721" y="15.367" extent="1-16" drill="0.35"/>
 <via x="53.213" y="13.208" extent="1-16" drill="0.35"/>
@@ -2294,6 +2293,12 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <via x="19.6088" y="4.3434" extent="1-16" drill="0.35"/>
 <via x="19.7104" y="5.6388" extent="1-16" drill="0.35"/>
 <via x="19.812" y="6.8072" extent="1-16" drill="0.35"/>
+<via x="45.085" y="14.6812" extent="1-16" drill="0.35"/>
+<via x="46.3804" y="16.2814" extent="1-16" drill="0.35"/>
+<via x="48.8188" y="12.5476" extent="1-16" drill="0.35"/>
+<via x="52.5018" y="12.2428" extent="1-16" drill="0.35"/>
+<via x="50.419" y="12.7762" extent="1-16" drill="0.35"/>
+<via x="47.9806" y="18.2372" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="+3V3">
 <contactref element="BMP1" pad="P1"/>

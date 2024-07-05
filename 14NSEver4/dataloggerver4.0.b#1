@@ -2289,6 +2289,11 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <via x="66.0146" y="23.2918" extent="1-16" drill="0.35"/>
 <via x="33.147" y="15.24" extent="1-16" drill="0.35"/>
 <via x="31.0388" y="-0.0254" extent="1-16" drill="0.35"/>
+<via x="20.0914" y="8.7122" extent="1-16" drill="0.35"/>
+<via x="20.447" y="3.3274" extent="1-16" drill="0.35"/>
+<via x="19.6088" y="4.3434" extent="1-16" drill="0.35"/>
+<via x="19.7104" y="5.6388" extent="1-16" drill="0.35"/>
+<via x="19.812" y="6.8072" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="+3V3">
 <contactref element="BMP1" pad="P1"/>
@@ -2337,10 +2342,13 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <wire x1="22.686" y1="2.35" x2="21.67" y2="2.35" width="0.3048" layer="1"/>
 <wire x1="3.81" y1="10.16" x2="4.445" y2="10.16" width="0.3048" layer="16"/>
 <wire x1="5.969" y1="5.969" x2="6.985" y2="4.953" width="0.3048" layer="16"/>
-<wire x1="19.067" y1="4.953" x2="21.67" y2="2.35" width="0.3048" layer="16"/>
+<wire x1="20.3238" y1="4.4836" x2="19.8544" y2="4.953" width="0.3048" layer="16"/>
+<wire x1="20.3238" y1="4.4836" x2="20.3238" y2="4.2296" width="0.3048" layer="16"/>
+<wire x1="21.67" y1="2.8834" x2="21.67" y2="2.35" width="0.3048" layer="16"/>
+<wire x1="21.67" y1="2.8834" x2="20.3238" y2="4.2296" width="0.3048" layer="16"/>
 <wire x1="4.445" y1="10.16" x2="5.969" y2="8.636" width="0.3048" layer="16"/>
 <wire x1="5.969" y1="8.636" x2="5.969" y2="5.969" width="0.3048" layer="16"/>
-<wire x1="6.985" y1="4.953" x2="19.067" y2="4.953" width="0.3048" layer="16"/>
+<wire x1="6.985" y1="4.953" x2="19.8544" y2="4.953" width="0.3048" layer="16"/>
 <wire x1="39.37" y1="18.02486875" x2="39.37" y2="16.56" width="0.3048" layer="16"/>
 <wire x1="40.1994" y1="18.85426875" x2="39.37" y2="18.02486875" width="0.3048" layer="16"/>
 <wire x1="63.5" y1="21.17" x2="64.389" y2="20.281" width="0.3048" layer="16"/>
