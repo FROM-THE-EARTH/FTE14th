@@ -2248,6 +2248,29 @@ by exp-lbrs.ulp</description>
 <via x="46.355" y="19.685" extent="1-16" drill="0.35"/>
 <via x="46.228" y="8.382" extent="1-16" drill="0.35"/>
 <via x="54.864" y="9.906" extent="1-16" drill="0.35"/>
+<via x="6.223" y="1.27" extent="1-16" drill="0.35"/>
+<via x="12.573" y="0" extent="1-16" drill="0.35"/>
+<via x="11.303" y="24.13" extent="1-16" drill="0.35"/>
+<via x="32.893" y="24.13" extent="1-16" drill="0.35"/>
+<via x="55.88" y="13.335" extent="1-16" drill="0.35"/>
+<via x="58.42" y="19.685" extent="1-16" drill="0.35"/>
+<via x="62.738" y="20.066" extent="1-16" drill="0.35"/>
+<via x="72.517" y="8.636" extent="1-16" drill="0.35"/>
+<via x="66.675" y="6.985" extent="1-16" drill="0.35"/>
+<via x="74.803" y="4.826" extent="1-16" drill="0.35"/>
+<via x="64.135" y="0.889" extent="1-16" drill="0.35"/>
+<via x="79.248" y="9.017" extent="1-16" drill="0.35"/>
+<via x="79.375" y="15.621" extent="1-16" drill="0.35"/>
+<via x="72.771" y="18.415" extent="1-16" drill="0.35"/>
+<via x="75.565" y="20.701" extent="1-16" drill="0.35"/>
+<via x="66.421" y="25.4" extent="1-16" drill="0.35"/>
+<via x="57.785" y="25.4" extent="1-16" drill="0.35"/>
+<via x="76.073" y="25.4" extent="1-16" drill="0.35"/>
+<via x="80.137" y="20.32" extent="1-16" drill="0.35"/>
+<via x="34.544" y="0" extent="1-16" drill="0.35"/>
+<via x="48.387" y="0" extent="1-16" drill="0.35"/>
+<via x="47.752" y="17.018" extent="1-16" drill="0.35"/>
+<via x="55.118" y="16.764" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="RESETB">
 <contactref element="R1" pad="2"/>
