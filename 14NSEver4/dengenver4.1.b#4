@@ -1917,9 +1917,9 @@ by exp-lbrs.ulp</description>
 <element name="CON5" library="XR Connector" library_urn="urn:adsk.eagle:library:38467597" package="2PIN" package3d_urn="urn:adsk.eagle:package:38467599/3" value="" x="78.74" y="16.51" smashed="yes" rot="MR90">
 <attribute name="NAME" x="81.28" y="12.7" size="1.27" layer="26" rot="MR90"/>
 </element>
-<element name="D1" library="ChipDiodes" library_urn="urn:adsk.eagle:library:42281194" package="SOD-123" package3d_urn="urn:adsk.eagle:package:42281200/2" value="" x="66.04" y="17.78" smashed="yes" rot="R90">
-<attribute name="NAME" x="65.04" y="14.78" size="1.27" layer="25" rot="R90"/>
-<attribute name="VALUE" x="68.04" y="14.78" size="1.27" layer="27" rot="R90"/>
+<element name="D1" library="ChipDiodes" library_urn="urn:adsk.eagle:library:42281194" package="SOD-123" package3d_urn="urn:adsk.eagle:package:42281200/2" value="" x="69.85" y="19.05" smashed="yes" rot="R180">
+<attribute name="NAME" x="72.85" y="18.05" size="1.27" layer="25" rot="R180"/>
+<attribute name="VALUE" x="72.85" y="21.05" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="D2" library="ChipDiodes" library_urn="urn:adsk.eagle:library:42281194" package="SOD-123" package3d_urn="urn:adsk.eagle:package:42281200/2" value="" x="45.72" y="13.97" smashed="yes" rot="R90">
 <attribute name="NAME" x="44.72" y="10.97" size="1.27" layer="25" rot="R90"/>
@@ -2164,7 +2164,14 @@ by exp-lbrs.ulp</description>
 <wire x1="25.82" y1="15.24" x2="25.82" y2="12.7" width="0.3048" layer="1"/>
 <wire x1="25.82" y1="15.24" x2="26.775" y2="16.195" width="0.3048" layer="1"/>
 <wire x1="26.775" y1="16.195" x2="40.64" y2="16.195" width="0.3048" layer="1"/>
-<wire x1="8.89" y1="1.27" x2="21.98" y2="9.29" width="0" layer="19" extent="1-1"/>
+<wire x1="10.3294" y1="7.1544" x2="12.446" y2="9.271" width="0.3048" layer="16"/>
+<wire x1="10.3294" y1="6.18426875" x2="10.3294" y2="7.1544" width="0.3048" layer="16"/>
+<wire x1="8.89" y1="1.27" x2="8.89" y2="4.74486875" width="0.3048" layer="16"/>
+<wire x1="8.89" y1="4.74486875" x2="10.3294" y2="6.18426875" width="0.3048" layer="16"/>
+<via x="21.082" y="9.271" extent="1-16" drill="0.35"/>
+<wire x1="21.082" y1="9.271" x2="21.961" y2="9.271" width="0.3048" layer="1"/>
+<wire x1="21.961" y1="9.271" x2="21.98" y2="9.29" width="0.3048" layer="1"/>
+<wire x1="12.446" y1="9.271" x2="21.082" y2="9.271" width="0.3048" layer="16"/>
 </signal>
 <signal name="N$12">
 <contactref element="Q1" pad="1"/>
@@ -2320,7 +2327,10 @@ by exp-lbrs.ulp</description>
 <contactref element="R8" pad="1"/>
 <contactref element="R7" pad="2"/>
 <wire x1="33.02" y1="19.9" x2="35.56" y2="19.9" width="0.3048" layer="1"/>
-<wire x1="35.56" y1="19.9" x2="40.64" y2="24.892" width="0" layer="19" extent="1-1"/>
+<wire x1="36.86500625" y1="21.20500625" x2="35.56" y2="19.9" width="0.3048" layer="1"/>
+<wire x1="36.86500625" y1="21.20500625" x2="37.33400625" y2="21.20500625" width="0.3048" layer="1"/>
+<wire x1="40.64" y1="24.511" x2="37.33400625" y2="21.20500625" width="0.3048" layer="1"/>
+<wire x1="40.64" y1="24.511" x2="40.64" y2="24.892" width="0.3048" layer="1"/>
 </signal>
 <signal name="IM_BUSY">
 <contactref element="IM2" pad="$P1"/>
@@ -2433,7 +2443,12 @@ by exp-lbrs.ulp</description>
 <signal name="BORD2">
 <contactref element="U$1" pad="1"/>
 <contactref element="U$7" pad="P$13"/>
-<wire x1="13.58" y1="8.49" x2="6.35" y2="22.86" width="0" layer="19" extent="1-1"/>
+<wire x1="6.35" y1="22.86" x2="3.81" y2="20.32" width="0.3048" layer="1"/>
+<wire x1="3.81" y1="20.32" x2="3.81" y2="6.35" width="0.3048" layer="1"/>
+<wire x1="3.81" y1="6.35" x2="5.08" y2="5.08" width="0.3048" layer="1"/>
+<wire x1="5.08" y1="5.08" x2="8.89" y2="5.08" width="0.3048" layer="1"/>
+<wire x1="12.3" y1="8.49" x2="13.58" y2="8.49" width="0.3048" layer="1"/>
+<wire x1="8.89" y1="5.08" x2="12.3" y2="8.49" width="0.3048" layer="1"/>
 </signal>
 <signal name="SERVORAW">
 <contactref element="DCDC3" pad="VIN"/>
@@ -2441,7 +2456,7 @@ by exp-lbrs.ulp</description>
 <contactref element="CON4" pad="P$2"/>
 <wire x1="78.74" y1="10.16" x2="73.66" y2="10.16" width="0.508" layer="1"/>
 <wire x1="73.66" y1="10.16" x2="68.58" y2="15.24" width="0.508" layer="1"/>
-<wire x1="68.58" y1="15.24" x2="66.04" y2="19.42" width="0" layer="19" extent="1-1"/>
+<wire x1="68.58" y1="15.24" x2="68.21" y2="19.05" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SERVO1">
 <contactref element="CON1" pad="P$1"/>
