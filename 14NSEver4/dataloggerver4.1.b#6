@@ -2010,25 +2010,30 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <wire x1="27.8291875" y1="16.44" x2="27.441" y2="16.0518125" width="0.508" layer="1"/>
 <wire x1="27.8291875" y1="14.84" x2="28.33" y2="14.84" width="0.508" layer="1"/>
 <wire x1="27.8291875" y1="14.84" x2="27.441" y2="15.2281875" width="0.508" layer="1"/>
-<wire x1="67.31" y1="22.86" x2="72.39" y2="26.67" width="0" layer="19" extent="1-1"/>
-<wire x1="61.35" y1="17.24" x2="67.31" y2="22.86" width="0" layer="19" extent="16-16"/>
-<wire x1="52.95" y1="16.44" x2="61.35" y2="17.24" width="0" layer="19" extent="16-16"/>
-<wire x1="52.95" y1="14.84" x2="52.95" y2="16.44" width="0" layer="19" extent="16-16"/>
-<wire x1="49.53" y1="15.24" x2="52.95" y2="14.84" width="0" layer="19" extent="16-16"/>
-<wire x1="44.45" y1="19.05" x2="49.53" y2="15.24" width="0" layer="19" extent="1-1"/>
-<wire x1="56.5" y1="8.81" x2="52.95" y2="14.84" width="0" layer="19" extent="16-16"/>
-<wire x1="62.23" y1="2.54" x2="56.5" y2="8.81" width="0" layer="19" extent="1-1"/>
-<wire x1="30.48" y1="16.51" x2="19.93" y2="17.24" width="0" layer="19" extent="1-1"/>
-<wire x1="19.93" y1="17.24" x2="30.48" y2="16.51" width="0" layer="19" extent="1-1"/>
-<wire x1="11.43" y1="22.86" x2="19.93" y2="17.24" width="0" layer="19" extent="1-1"/>
-<wire x1="30.48" y1="15.24" x2="19.93" y2="17.24" width="0" layer="19" extent="1-1"/>
-<wire x1="33.44" y1="3.81" x2="31.33" y2="3.81" width="0" layer="19" extent="1-16"/>
-<wire x1="36.21" y1="1.35" x2="33.44" y2="3.81" width="0" layer="19" extent="16-16"/>
-<wire x1="19.05" y1="2.54" x2="31.33" y2="3.81" width="0" layer="19" extent="1-1"/>
 <wire x1="28.33" y1="16.44" x2="30.41" y2="16.44" width="0.508" layer="1"/>
 <wire x1="30.48" y1="16.51" x2="30.41" y2="16.44" width="0.508" layer="1"/>
 <wire x1="28.33" y1="14.84" x2="30.08" y2="14.84" width="0.508" layer="1"/>
 <wire x1="30.08" y1="14.84" x2="30.48" y2="15.24" width="0.508" layer="1"/>
+<wire x1="49.53" y1="15.24" x2="49.93" y2="14.84" width="0.508" layer="16"/>
+<wire x1="49.93" y1="14.84" x2="52.95" y2="14.84" width="0.508" layer="16"/>
+<wire x1="53.4508125" y1="14.84" x2="53.839" y2="15.2281875" width="0.508" layer="16"/>
+<wire x1="53.839" y1="15.2281875" x2="53.839" y2="16.0518125" width="0.508" layer="16"/>
+<wire x1="52.95" y1="14.84" x2="53.4508125" y2="14.84" width="0.508" layer="16"/>
+<wire x1="53.839" y1="16.0518125" x2="53.4508125" y2="16.44" width="0.508" layer="16"/>
+<wire x1="53.4508125" y1="16.44" x2="52.95" y2="16.44" width="0.508" layer="16"/>
+<wire x1="67.31" y1="22.86" x2="72.39" y2="26.67" width="0" layer="19" extent="1-1"/>
+<wire x1="61.35" y1="17.24" x2="67.31" y2="22.86" width="0" layer="19" extent="16-16"/>
+<wire x1="52.95" y1="16.44" x2="61.35" y2="17.24" width="0" layer="19" extent="16-16"/>
+<wire x1="44.45" y1="19.05" x2="49.53" y2="15.24" width="0" layer="19" extent="1-1"/>
+<wire x1="56.5" y1="8.81" x2="52.95" y2="14.84" width="0" layer="19" extent="16-16"/>
+<wire x1="62.23" y1="2.54" x2="56.5" y2="8.81" width="0" layer="19" extent="1-1"/>
+<wire x1="30.48" y1="16.51" x2="44.45" y2="19.05" width="0" layer="19" extent="1-1"/>
+<wire x1="19.93" y1="17.24" x2="28.33" y2="16.44" width="0" layer="19" extent="1-1"/>
+<wire x1="11.43" y1="22.86" x2="19.93" y2="17.24" width="0" layer="19" extent="1-1"/>
+<wire x1="31.33" y1="3.81" x2="28.33" y2="14.84" width="0" layer="19" extent="1-1"/>
+<wire x1="33.44" y1="3.81" x2="31.33" y2="3.81" width="0" layer="19" extent="1-1"/>
+<wire x1="36.21" y1="1.35" x2="33.44" y2="3.81" width="0" layer="19" extent="1-1"/>
+<wire x1="19.05" y1="2.54" x2="31.33" y2="3.81" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="GND">
 <contactref element="BMP1" pad="P2"/>
@@ -2102,11 +2107,11 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <contactref element="R18" pad="1"/>
 <contactref element="JP7" pad="5"/>
 <contactref element="JP2" pad="4"/>
+<wire x1="66.04" y1="5.93" x2="68.58" y2="5.93" width="0.3048" layer="1"/>
+<wire x1="68.58" y1="5.93" x2="71.12" y2="5.93" width="0.3048" layer="1"/>
+<wire x1="71.12" y1="5.93" x2="73.66" y2="5.93" width="0.3048" layer="1"/>
 <wire x1="64.72" y1="12.7" x2="64.77" y2="22.86" width="0" layer="19" extent="16-16"/>
 <wire x1="66.04" y1="5.93" x2="64.72" y2="12.7" width="0" layer="19" extent="1-16"/>
-<wire x1="68.58" y1="5.93" x2="66.04" y2="5.93" width="0" layer="19" extent="1-1"/>
-<wire x1="71.12" y1="5.93" x2="68.58" y2="5.93" width="0" layer="19" extent="1-1"/>
-<wire x1="73.66" y1="5.93" x2="71.12" y2="5.93" width="0" layer="19" extent="1-1"/>
 <wire x1="60.96" y1="4.23" x2="66.04" y2="5.93" width="0" layer="19" extent="1-1"/>
 <wire x1="58.42" y1="4.23" x2="60.96" y2="4.23" width="0" layer="19" extent="1-1"/>
 <wire x1="40.83" y1="12.78" x2="58.42" y2="4.23" width="0" layer="19" extent="1-1"/>
@@ -2129,7 +2134,11 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <wire x1="22.93" y1="9.341" x2="22.93" y2="9.849" width="0.508" layer="16"/>
 <via x="22.93" y="9.849" extent="1-16" drill="0.35"/>
 <wire x1="20.32" y1="6.731" x2="22.93" y2="9.341" width="0.508" layer="16"/>
-<wire x1="38.75" y1="8.97" x2="33.21" y2="12.78" width="0" layer="19" extent="1-1"/>
+<wire x1="33.21" y1="12.78" x2="35.5336" y2="10.4564" width="0.3048" layer="1"/>
+<wire x1="35.5336" y1="10.4564" x2="37.27873125" y2="10.4564" width="0.3048" layer="1"/>
+<wire x1="37.27873125" y1="10.4564" x2="37.5694" y2="10.16573125" width="0.3048" layer="1"/>
+<wire x1="37.5694" y1="10.16573125" x2="37.5694" y2="10.1506" width="0.3048" layer="1"/>
+<wire x1="37.5694" y1="10.1506" x2="38.75" y2="8.97" width="0.3048" layer="1"/>
 <wire x1="22.93" y1="11.04" x2="33.21" y2="12.78" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SCL">
@@ -2142,7 +2151,11 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <wire x1="23.73" y1="11.04" x2="23.73" y2="8.617" width="0.508" layer="1"/>
 <wire x1="23.73" y1="7.943" x2="22.86" y2="7.073" width="0.508" layer="16"/>
 <wire x1="22.86" y1="7.073" x2="22.86" y2="5.93" width="0.508" layer="16"/>
-<wire x1="41.28" y1="8.97" x2="35.75" y2="12.78" width="0" layer="19" extent="1-1"/>
+<wire x1="35.75" y1="12.78" x2="37.1846" y2="11.3454" width="0.3048" layer="1"/>
+<wire x1="37.1846" y1="11.3454" x2="38.92973125" y2="11.3454" width="0.3048" layer="1"/>
+<wire x1="38.92973125" y1="11.3454" x2="40.1094" y2="10.16573125" width="0.3048" layer="1"/>
+<wire x1="40.1094" y1="10.16573125" x2="40.1094" y2="10.1406" width="0.3048" layer="1"/>
+<wire x1="40.1094" y1="10.1406" x2="41.28" y2="8.97" width="0.3048" layer="1"/>
 <wire x1="23.73" y1="11.04" x2="35.75" y2="12.78" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED1.2">
@@ -2170,11 +2183,12 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <contactref element="C3" pad="1"/>
 <contactref element="SW1" pad="P$2"/>
 <contactref element="U$8" pad="P$29"/>
-<wire x1="29.63" y1="3.81" x2="29.63" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="26.67" y1="2.855" x2="29.63" y2="3.81" width="0" layer="19" extent="1-1"/>
-<wire x1="25.4" y1="7.62" x2="29.63" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="24.53" y1="11.04" x2="24.53" y2="8.49" width="0.508" layer="1"/>
-<wire x1="24.53" y1="8.49" x2="25.4" y2="7.62" width="0.508" layer="1"/>
+<wire x1="24.53" y1="7.72486875" x2="25.90486875" y2="6.35" width="0.3048" layer="1"/>
+<wire x1="25.90486875" y1="6.35" x2="29.63" y2="6.35" width="0.3048" layer="1"/>
+<wire x1="24.53" y1="11.04" x2="24.53" y2="7.72486875" width="0.3048" layer="1"/>
+<wire x1="29.63" y1="3.81" x2="29.63" y2="6.35" width="0.3048" layer="1"/>
+<wire x1="29.63" y1="3.81" x2="28.675" y2="2.855" width="0.3048" layer="1"/>
+<wire x1="28.675" y1="2.855" x2="26.67" y2="2.855" width="0.3048" layer="1"/>
 </signal>
 <signal name="MISO">
 <contactref element="CN1" pad="DAT0"/>
@@ -2342,7 +2356,8 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <signal name="N$11">
 <contactref element="R14" pad="1"/>
 <contactref element="L3" pad="AN"/>
-<wire x1="44.97" y1="8.89" x2="44.87" y2="11.43" width="0" layer="19" extent="1-1"/>
+<wire x1="44.97" y1="8.89" x2="44.87" y2="8.99" width="0.3048" layer="1"/>
+<wire x1="44.87" y1="8.99" x2="44.87" y2="11.43" width="0.3048" layer="1"/>
 </signal>
 <signal name="SCL1">
 <contactref element="BMX2" pad="SCL"/>
