@@ -69,6 +69,12 @@ restTime = 0.0
 diff_rot = 0.4
 object_distance_Flag=0
 upside_down_Flag = 0
+distance_Flag = 0  # judge the stack : no obstacle distance_Flag = 0, if CanSat stacked distance_Flag = 1
+distance_diff = [0.0, 0.0]  # Distance change
+while_judge_distance = 0
+distance_time = [0.0, 0.0]
+
+
 
 bmx = BMX055.BMX055()
 bmp = BMP085.BMP085()
@@ -268,7 +274,7 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
         True
 
 def stuck():
-    object_distance=[0.0,0.0,0.0,0.0,0.0]
+    object_distance=[0.0, 0.0, 0.0, 0.0, 0.0]
     for i in range(5):
         object_distance[i]=object_distance       
     return all( x <= 10 for x in object_distance)
@@ -355,10 +361,25 @@ def calcAzimuth():  # 方位角計算用関数
 
 def get_object_distance():  #超音波での障害物との距離計算関数
     global object_distance
+    global distance_diff
+    global distance_Flag
+    global while_judge_distance
     #Trigピンを10μsだけHIGHにして超音波の発信開始
     GPIO.output(trig_pin, GPIO.HIGH)
     time.sleep(0.000010)
     GPIO.output(trig_pin, GPIO.LOW)
+
+
+    if while_judge_distance == 0:
+        while_judge_distance = 1
+        distance_diff[0] = distance
+        distance_time[0] = currentMilliTime()
+    elif while_judge_distance == 1:
+        distance_time[1] = currentMilliTime()
+        if distance_time[1] - distance_time[0] > 10 * 1000:
+            distance_diff[1] = distance
+            if distance_diff[1] - distance_diff[0] < 1:  # stack CanSat move only 1 meter while 10s
+                distance_Flag = 1
 
     while not GPIO.input(echo_pin):
         pass
