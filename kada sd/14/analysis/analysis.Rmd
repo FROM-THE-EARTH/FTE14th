@@ -1,0 +1,159 @@
+---
+title: "Flight Data Analysis"
+output: html_notebook
+---
+
+## パッケージ読み込み・諸定数定義
+```{r}
+library(readxl)
+library(tidyverse)
+library(ggplot2)
+
+altitude_ls = 90.5 # 射点高度
+g = 9.796656# 重力加速度の大きさ
+R_d = 287.07 # 乾燥空気の気体定数
+
+```
+
+
+## データインポート・抽出
+```{r}
+setwd("here is a direcotry path to the file analyzed")
+df <- read_excel("flight_analysis.xlsx", sheet="圧力・温度2")
+
+df |> select("圧力 [Pa]")    |> unlist() -> pressure   # 圧力
+df |> select(`絶対温度 [K]`) |> unlist() -> abs_temp   # 絶対温度
+df |> select("高度")         |> unlist() -> alt        # 標高
+df |> select("annotation")   |> unlist() -> annotation # 注釈
+
+match("lift-off", annotation)   -> idx_lift_off # 離陸した行
+
+match("touch-down", annotation) -> idx_touch_down # 着地した行
+```
+
+## 射点平均圧力
+```{r}
+pressure_ave = mean(pressure[1:(idx_lift_off-1)]) # 射点平均圧力
+print(pressure_ave)
+```
+
+
+## グラフプロット
+```{r}
+rate <- 0.135 # データ取得レート
+
+margin <- c(25, 50) # 左右に余分にとる行数
+
+x_time <- seq(-margin[1], idx_touch_down - idx_lift_off + margin[2]) * rate
+h <- alt[(idx_lift_off-margin[1]):(idx_touch_down+margin[2])]
+
+p <- ggplot(mapping = aes(x = x_time, y = h)) +
+  geom_line(linewidth=1) + labs(x = "X [s]", y = "altitude [m]") + 
+#  geom_vline(xintercept = 10, linetype="dashed") + annotate("text", x=10, y=0, label=" X+10 ", hjust=1) +
+  geom_vline(xintercept = 12, linetype="dashed") + annotate("text", x=12, y=0, label=" X+12 ", hjust=0) + 
+  theme_light()
+
+p
+ggsave("tanpopo_alt_2.png")
+```
+# 最高速度計算
+```{r}
+diff <- c(h, c(0, 0)) - c(c(0, 0), h)
+speed <- (diff / rate / 2)
+speed <- speed[2:(length(speed)-1)]
+
+speed_max = max(speed)
+print("max speed [m/s] : ")
+print(speed_max)
+print("max speed [km/h]: ")
+print(speed_max * 3.6)
+p <- ggplot(mapping = aes(x = x_time, y = speed)) +
+  geom_line(linewidth=1) + labs(x = "X [s]", y = "vertical velocity [m/s]") + 
+  geom_vline(xintercept = 10, linetype="dashed") + annotate("text", x=10, y=20, label=" X+10 ", hjust=1) +
+  geom_vline(xintercept = 12, linetype="dashed") + annotate("text", x=12, y=20, label=" X+12 ", hjust=0) + 
+  theme_light() + 
+  geom_hline(yintercept = -9.9, linetype="dashed") + annotate("text", x=34, y=-20, label="-10 [m/s]\n(parachute design val.)", hjust=0.5, size=4)
+
+p
+ggsave("tanpopo_vertical_vel.png")
+
+```
+
+
+
+# 九軸センサデータ取得
+
+
+```{r}
+# フライトピンが抜ける前後1440点のデータを取得
+n_slice = 1440
+read_csv("../2/Gyro_2.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_tail(n = n_slice) -> gyro_prelaunch
+read_csv("../3/Gyro_3.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_head(n = n_slice) -> gyro_launched
+gyro <- rbind(gyro_prelaunch, gyro_launched) |> as.matrix()
+
+read_csv("../2/Accl_2.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_tail(n = n_slice) -> accel_prelaunch
+read_csv("../3/Accl_3.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_head(n = n_slice) -> accel_launched
+accel <- rbind(accel_prelaunch, accel_launched) |> as.matrix()
+
+read_csv("../2/Mag_2.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_tail(n = n_slice) -> mag_prelaunch
+read_csv("../3/Mag_3.csv", show_col_types = FALSE, name_repair = "unique_quiet")[, 3:5] |> slice_head(n = n_slice) -> mag_launched
+mag <- rbind(mag_prelaunch, mag_launched) |> as.matrix()
+
+plot3 <- function(x, data, lab_x, lab_y, title = "") {
+  ggplot() +
+    geom_line(aes(x = x, y = data[,1], color="x"), size=0.3) +
+    geom_line(aes(x = x, y = data[,2], color="y"), size=0.3) + 
+    geom_line(aes(x = x, y = data[,3], color="z"), size=0.3) + 
+    labs(x = lab_x, y = lab_y, title = title) + theme_light()+ 
+    geom_vline(xintercept = 10, linetype="dashed") + annotate("text", x=10, y=0, label=" X+10 ", hjust=1) +
+    geom_vline(xintercept = 12, linetype="dashed") + annotate("text", x=12, y=0, label=" X+12 ", hjust=0)
+}
+
+plot3(x_time, accel[(idx_lift_off-margin[1]):(idx_touch_down+margin[2]), ], "X [s]", "Acceleration [m/s^2]")
+ggsave("accel.png")
+plot3(x_time, gyro[(idx_lift_off-margin[1]):(idx_touch_down+margin[2]), ], "X [s]", "Gyro [deg/s]")
+ggsave("gyro.png")
+plot3(x_time, mag[(idx_lift_off-margin[1]):(idx_touch_down+margin[2]), ], "X [s]", "Magnetometer [μT]")
+ggsave("mag.png")
+```
+
+加速度の大きさ
+
+```{r}
+calc_mag <- function(v) {
+  return(sqrt(sum(v^2)))
+}
+accel_mag <- accel |> apply(1, calc_mag)
+accel_mag <- accel_mag[(idx_lift_off-margin[1]):(idx_touch_down+margin[2])]
+
+ggplot(mapping = aes(x = x_time, y = accel_mag)) +
+  geom_line(size=1) + labs(x = "X [s]", y = "acceleration [m/s]") + 
+  geom_vline(xintercept = 10, linetype="dashed") + annotate("text", x=10, y=0, label=" X+10 ", hjust=1) +
+  geom_vline(xintercept = 12, linetype="dashed") + annotate("text", x=12, y=0, label=" X+12 ", hjust=0) + 
+  theme_light() + 
+  geom_vline(xintercept = 10, linetype="dashed") + annotate("text", x=10, y=0, label=" X+10 ", hjust=1) +
+  geom_vline(xintercept = 12, linetype="dashed") + annotate("text", x=12, y=0, label=" X+12 ", hjust=0)
+ggsave("accel_mag.png")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
