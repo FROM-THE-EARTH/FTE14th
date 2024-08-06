@@ -15,7 +15,8 @@ from micropyGPS import MicropyGPS
 from library import detect_corn as dc
 from picamera2 import Picamera2
 import matplotlib.pyplot as plt
-import cv2
+import RPi.GPIO as GPIO
+import sys
 
 
 # 定数　上書きしない
@@ -38,6 +39,9 @@ M4A = 6
 M4B = 5
 ROTATION_DIFF = 80
 MOTOR_COFFICIENT = 0.5
+trig_pin = 15                           # GPIO 15
+echo_pin = 14                           # GPIO 14
+speed_of_sound = 34370  #音速（気温20℃）
 
 # 変数
 acc = [0.0, 0.0, 0.0]
@@ -52,6 +56,7 @@ maxAlt = 0.0
 minAlt = 0.0
 pres = 0.0
 distance = 0
+object_distance = 0.0
 angle = 0.0
 azimuth = 0.0
 direction = 0.0
@@ -62,7 +67,8 @@ cone_direction = 0
 cone_probability = 0
 restTime = 0.0
 diff_rot = 0.4
-
+object_distance_Flag=0
+upside_down_Flag = 0
 
 bmx = BMX055.BMX055()
 bmp = BMP085.BMP085()
@@ -113,7 +119,11 @@ def main():
 
         elif phase == 3:
             print("phase3 : GPS start")
-            if distance < 4.0:  # GPS座標との距離 < m以内
+            if stuck==True:   
+                phase = -1
+            if upside_down==True: 
+                phase = -2
+            elif distance < 4.0:  # GPS座標との距離 < m以内　　#スタック優先
                 phase = 4
             #print(distance)
             #print(direction)
@@ -146,7 +156,21 @@ def main():
         elif phase == 6:
             print("phase6 : Goal")
             time.sleep(10000)
-            
+        elif phase==-1:
+            print("phase-1 : stuck")
+            if object_distance_Flag ==0:
+                phase = -1
+            elif object_distance_Flag == 1:
+                phase = 3
+                object_distance_Flag = 0
+        elif phase ==-2:
+            print("phase-2 : upside down")
+            if  upside_down_Flag == 0:
+                phase = -2
+            elif upside_down_Flag == 1:
+                phase = 3
+                upside_down_Flag = 0
+
         time.sleep(0.1)
 
 
@@ -162,13 +186,15 @@ def Setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(LED1, GPIO.OUT)
     GPIO.setup(LED2, GPIO.OUT)
+    GPIO.setup(trig_pin, GPIO.OUT)          # Trigピン出力モード設定
+    GPIO.setup(echo_pin, GPIO.IN)           # Echoピン入力モード設定
     
     servoMotor(90)
 
 
     with open(fileName, 'a') as f:
         writer = csv.writer(f)
-        writer.writerow(['MilliTime','Phase','AccX','AccY','AccZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ','LAT','LNG','ALT','Distance','Azimuth','Angle','Direction','Fall'])
+        writer.writerow(['MilliTime','Phase','AccX','AccY','AccZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ','LAT','LNG','ALT','Distance','Object_Distance','Azimuth','Angle','Direction','Fall'])
         
     getThread = threading.Thread(target=moveMotor_thread, args=())
     getThread.daemon = True
@@ -225,6 +251,7 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     global minAlt
     
 
+
     if maxAlt < alt:
         maxAlt = alt
     if minAlt > alt:
@@ -240,6 +267,14 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     else:
         True
 
+def stuck():
+    object_distance=[0.0,0.0,0.0,0.0,0.0]
+    for i in range(5):
+        object_distance[i]=object_distance       
+    return all( x <= 10 for x in object_distance)
+
+def upside_down():
+    return True
 
 def calibration():  # calibrate BMX raw data
     global calibBias
@@ -318,6 +353,20 @@ def calcAzimuth():  # 方位角計算用関数
     elif mag[1] < 0:
         azimuth = -90 + azimuth
 
+def get_object_distance():  #超音波での障害物との距離計算関数
+    global object_distance
+    #Trigピンを10μsだけHIGHにして超音波の発信開始
+    GPIO.output(trig_pin, GPIO.HIGH)
+    time.sleep(0.000010)
+    GPIO.output(trig_pin, GPIO.LOW)
+
+    while not GPIO.input(echo_pin):
+        pass
+    t1 = time.time() # 超音波発信時刻（EchoピンがHIGHになった時刻）格納
+    while GPIO.input(echo_pin):
+        pass
+    t2 = time.time() # 超音波受信時刻（EchoピンがLOWになった時刻）格納
+    object_distance = (t2 - t1) * speed_of_sound / 2 # 時間差から対象物までの距離計算
 
 def servoMotor(angle):
     assert 0 <= angle <= 180, '角度は0から180の間でなければなりません'
@@ -383,9 +432,10 @@ def setData_thread():
         calcAzimuth()
         set_direction()
         calcdistance()
+        get_object_distance()
         with open(fileName, 'a', newline="") as f:
             writer = csv.writer(f)
-            writer.writerow([currentMilliTime(), round(phase,1), acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[1], mag[1], mag[2], lat, lng, alt, distance, azimuth, angle, direction, fall])
+            writer.writerow([currentMilliTime(), round(phase,1), acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[1], mag[1], mag[2], lat, lng, alt, distance, object_distance, azimuth, angle, direction, fall])
         time.sleep(DATA_SAMPLING_RATE)
 
 
@@ -424,6 +474,21 @@ def moveMotor_thread():
             M1B_pwm.ChangeDutyCycle(0)
             M4A_pwm.ChangeDutyCycle(60)
             M4B_pwm.ChangeDutyCycle(0)
+        elif direction == 500.0:  # left back
+            M1A_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(30)
+            M4A_pwm.ChangeDutyCycle(0)
+            M4B_pwm.ChangeDutyCycle(10*diff_rot)
+        elif direction == 600.0:  # right back
+            M1A_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(10)
+            M4A_pwm.ChangeDutyCycle(0)
+            M4B_pwm.ChangeDutyCycle(30*diff_rot)
+        elif direction == 700: #back
+            M1A_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(100)
+            M4A_pwm.ChangeDutyCycle(0)
+            M4B_pwm.ChangeDutyCycle(100)
         elif direction > 0.0 and direction <= 180.0:  # left
             M1A_pwm.ChangeDutyCycle((30 + MOTOR_COFFICIENT * 50) * diff_rot)
             M1B_pwm.ChangeDutyCycle(0)
@@ -439,6 +504,8 @@ def moveMotor_thread():
 def set_direction():  # -180<direction<180  #rover move to right while direction > 0
     global direction
     global phase
+    global object_distance_Flag
+    global upside_down_Flag
 
     if phase == 0:  # 投下
         direction = 360
@@ -478,6 +545,21 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
 
     elif phase == 6:
         direction = 360
+    elif phase == -1:
+        for _ in range(4):
+            direction = 500
+            time.sleep(0.3)
+            direction = 600
+            time.sleep(0.3)
+        direction = 90
+        time.sleep(2)
+        direction = -360
+        time.sleep(2)
+        object_distance_Flag=1
+    elif phase == -2:
+        direction = 700
+        time.sleep(2)
+        upside_down_Flag=1
     
         
              
