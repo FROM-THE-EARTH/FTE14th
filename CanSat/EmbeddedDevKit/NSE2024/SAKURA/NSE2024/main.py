@@ -15,7 +15,7 @@ from micropyGPS import MicropyGPS
 from library import detect_corn as dc
 from picamera2 import Picamera2
 import matplotlib.pyplot as plt
-
+import cv2
 
 
 # 定数　上書きしない
