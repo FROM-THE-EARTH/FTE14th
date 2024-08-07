@@ -67,9 +67,9 @@ cone_direction = 0
 cone_probability = 0
 restTime = 0.0
 diff_rot = 0.4
-object_distance_Flag=0
 upside_down_Flag = 0
-distance_Flag = 0  # judge the stack : no obstacle distance_Flag = 0, if CanSat stacked distance_Flag = 1
+stuck_uss_Flag=0    # judge the stuck by ultrasonic sensor
+stuck_GPS_Flag = 0  # judge the stuck by GPS : no obstacle distance_Flag = 0, if CanSat stucked distance_Flag = 1
 distance_diff = [0.0, 0.0]  # Distance change
 while_judge_distance = 0
 distance_time = [0.0, 0.0]
@@ -125,9 +125,11 @@ def main():
 
         elif phase == 3:
             print("phase3 : GPS start")
-            if stuck==True:   
+            stuck_uss()
+            stuck_GPS()
+            if stuck_uss_Flag == 1 or stuck_GPS_Flag == 1:   
                 phase = -1
-            if upside_down==True: 
+            if upside_down_Flag == 1: 
                 phase = -2
             elif distance < 4.0:  # GPS座標との距離 < m以内　　#スタック優先
                 phase = 4
@@ -164,18 +166,19 @@ def main():
             time.sleep(10000)
         elif phase==-1:
             print("phase-1 : stuck")
-            if object_distance_Flag ==0:
+            if stuck_uss_Flag == 1 or stuck_GPS_Flag == 1:
                 phase = -1
-            elif object_distance_Flag == 1:
+            elif stuck_uss_Flag == 0 or stuck_GPS_Flag == 0:
                 phase = 3
-                object_distance_Flag = 0
+            
+
         elif phase ==-2:
             print("phase-2 : upside down")
-            if  upside_down_Flag == 0:
+            if  upside_down_Flag == 1:
                 phase = -2
-            elif upside_down_Flag == 1:
+            elif upside_down_Flag == 0:
                 phase = 3
-                upside_down_Flag = 0
+            
 
         time.sleep(0.1)
 
@@ -273,14 +276,35 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     else:
         True
 
-def stuck():
+def stuck_uss():
+    global stuck_uss_Flag
     object_distance=[0.0, 0.0, 0.0, 0.0, 0.0]
     for i in range(5):
         object_distance[i]=object_distance       
-    return all( x <= 10 for x in object_distance)
+    if all( x <= 10 for x in object_distance):
+        stuck_uss_Flag = 1
+
+def stuck_GPS():
+    global distance_diff
+    global stuck_GPS_Flag #0:not stuck　1:stuck
+    global while_judge_distance
+
+    if while_judge_distance == 0:
+        distance_diff[0] = distance
+        distance_time[0] = currentMilliTime()
+        while_judge_distance = 1
+    elif while_judge_distance == 1:
+        distance_time[1] = currentMilliTime()
+        if distance_time[1] - distance_time[0] > 10 * 1000:
+            distance_diff[1] = distance
+            if distance_diff[1] - distance_diff[0] < 1:  # stack CanSat move only 1 meter while 10s
+                stuck_GPS_Flag = 1
+        while_judge_distance=0    
 
 def upside_down():
-    return True
+    global upside_down_Flag
+    if():
+        upside_down_Flag=1
 
 def calibration():  # calibrate BMX raw data
     global calibBias
@@ -361,25 +385,10 @@ def calcAzimuth():  # 方位角計算用関数
 
 def get_object_distance():  #超音波での障害物との距離計算関数
     global object_distance
-    global distance_diff
-    global distance_Flag
-    global while_judge_distance
     #Trigピンを10μsだけHIGHにして超音波の発信開始
     GPIO.output(trig_pin, GPIO.HIGH)
     time.sleep(0.000010)
     GPIO.output(trig_pin, GPIO.LOW)
-
-
-    if while_judge_distance == 0:
-        while_judge_distance = 1
-        distance_diff[0] = distance
-        distance_time[0] = currentMilliTime()
-    elif while_judge_distance == 1:
-        distance_time[1] = currentMilliTime()
-        if distance_time[1] - distance_time[0] > 10 * 1000:
-            distance_diff[1] = distance
-            if distance_diff[1] - distance_diff[0] < 1:  # stack CanSat move only 1 meter while 10s
-                distance_Flag = 1
 
     while not GPIO.input(echo_pin):
         pass
@@ -525,7 +534,8 @@ def moveMotor_thread():
 def set_direction():  # -180<direction<180  #rover move to right while direction > 0
     global direction
     global phase
-    global object_distance_Flag
+    global stuck_uss_Flag
+    global stuck_GPS_Flag
     global upside_down_Flag
 
     if phase == 0:  # 投下
@@ -576,11 +586,12 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
         time.sleep(2)
         direction = -360
         time.sleep(2)
-        object_distance_Flag=1
+        stuck_uss_Flag=0
+        stuck_GPS_Flag=0
     elif phase == -2:
         direction = 700
         time.sleep(2)
-        upside_down_Flag=1
+        upside_down_Flag=0
     
         
              
