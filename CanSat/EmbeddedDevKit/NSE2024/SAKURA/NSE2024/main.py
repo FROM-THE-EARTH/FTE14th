@@ -15,7 +15,6 @@ from micropyGPS import MicropyGPS
 from library import detect_corn as dc
 from picamera2 import Picamera2
 import matplotlib.pyplot as plt
-import RPi.GPIO as GPIO
 import sys
 
 
@@ -183,17 +182,14 @@ def Setup():
         
     getThread = threading.Thread(target=moveMotor_thread, args=())
     getThread.daemon = True
-    getThread.setDaemon(True)
     getThread.start()
 
     dataThread = threading.Thread(target=setData_thread, args=())
     dataThread.daemon = True
-    dataThread.setDaemon(True)
     dataThread.start()
 
     gpsThread = threading.Thread(target=GPS_thread, args=())
     gpsThread.daemon = True
-    gpsThread.setDaemon(True)
     gpsThread.start()
 
 
@@ -236,7 +232,6 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     global minAlt
     
 
-
     if maxAlt < alt:
         maxAlt = alt
     if minAlt > alt:
@@ -250,7 +245,7 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
         return False
      
     else:
-        True
+        return True
 
 # def stuck_uss():
 #     global stuck_uss_Flag
@@ -439,14 +434,14 @@ def cone_detect():
 
     
 def setData_thread():
-    object_distace_list=[]
+    object_distance_list=[]
     while True:
         getBmxData()
         calcAngle()
         calcAzimuth()
         set_direction()
         calcdistance()
-        object_distace=get_object_distance()
+        object_distance=get_object_distance()
 
         #Stuck_uss_Flag立てちゃうよ　＾＾
         global stuck_uss_Flag  
