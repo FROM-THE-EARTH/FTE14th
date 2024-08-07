@@ -164,6 +164,8 @@ def main():
         elif phase == 6:
             print("phase6 : Goal")
             time.sleep(10000)
+
+
         elif phase==-1:
             print("phase-1 : stuck")
             if stuck_uss_Flag == 1 or stuck_GPS_Flag == 1:
@@ -171,7 +173,6 @@ def main():
             elif stuck_uss_Flag == 0 or stuck_GPS_Flag == 0:
                 phase = 3
             
-
         elif phase ==-2:
             print("phase-2 : upside down")
             if  upside_down_Flag == 1:
