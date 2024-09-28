@@ -15,16 +15,15 @@ from micropyGPS import MicropyGPS
 from library import detect_corn as dc
 from picamera2 import Picamera2
 import matplotlib.pyplot as plt
-
+import RPi.GPIO as GPIO
+import sys
 
 
 # 定数　上書きしない
 MAG_CONST = 8.53  # 地磁気補正用の偏角
-CALIBRATION_MILLITIME = 10 * 1000
-TARGET_LAT = 40.14230733
-TARGET_LNG = 139.98738483
-# TARGET_LAT = 40.14247083
-# TARGET_LNG = 139.98780116
+CALIBRATION_MILLITIME = 20 * 1000
+TARGET_LAT  = 38.266285
+TARGET_LNG = 140.855498
 TARGET_ALTITUDE = 20
 DATA_SAMPLING_RATE = 0.00001
 ALTITUDE_CONST1 = 30
@@ -39,12 +38,9 @@ M1A = 13
 M1B = 19
 M4A = 6
 M4B = 5
-ROTATION_DIFF = 80
-MOTOR_COFFICIENT = 0.5
-TRIG = 22                           
-ECHO = 27                           
-SPEED_OF_SOUND = 34767  #音速（気温27℃）
-OBJECT_DISTANCE = 10 # if Object is in 10 meter,Rover stuck 
+trig_pin = 15                           # GPIO 15
+echo_pin = 14                           # GPIO 14
+speed_of_sound = 34370  #音速（気温20℃）
 
 # 変数
 acc = [0.0, 0.0, 0.0]
@@ -52,13 +48,14 @@ gyro = [0.0, 0.0, 0.0]
 mag = [0.0, 0.0, 0.0]
 calibBias = [0.0, 0.0, 0.0]
 calibRange = [1.0, 1.0, 1.0]
-lat = 0.0
+lat = 0.0  # from GPS sensor
 lng = 0.0
 alt = 0.0
 maxAlt = 0.0
 minAlt = 0.0
 pres = 0.0
 distance = 0
+object_distance = 0.0
 angle = 0.0
 azimuth = 0.0
 direction = 0.0
@@ -69,7 +66,6 @@ cone_direction = 0
 cone_probability = 0
 restTime = 0.0
 diff_rot = 0.4
-object_distance = 0.0
 upside_down_Flag = 0 # judge the upside down by acc(bmx)
 stuck_uss_Flag=0    # judge the stuck by ultrasonic sensor
 stuck_GPS_Flag = 0  # judge the stuck by GPS : no obstacle distance_Flag = 0, if CanSat stucked distance_Flag = 1
@@ -95,47 +91,49 @@ def main():
     n = 0
 
     while True:
-        print("-----------------------------------")
-        print(lat)
-        print(lng)
+        LED_Checker()
         if phase == 0:  # 投下
             print("phase0 : falling")
             start = time.time()
             while True:
+                getBmxData()
+                print(fall)
                 restTime = time.time() - start
-                if fall > 22:
-                    time.sleep(5)
+                if fall > 20:
+                    print("para released")
+                    time.sleep(10)
                     break
                 if flying() == False:
                     break
-                if restTime > 5 * 60:# 5 * 60
+                if restTime > 5 * 60:
                     phase = 1
-                    break
                 time.sleep(0.1)
             phase = 1
 
         elif phase == 1: # パラ分離
             print("phase1 : remove para")
             servoMotor(160)
-            time.sleep(5)
+            time.sleep(3)
             servoMotor(90)
             phase = 2
 
         elif phase == 2:  # キャリブレーション
             print("phase2 : calibration start")
-            direction = -360
-            time.sleep(3)
             calibration()
             phase = 3
 
         elif phase == 3:
             print("phase3 : GPS start")
-#             print(direction)
-#             print(distance)
-#             print("--------------")
-            if distance < 3.0:  # GPS座標との距離 < m以内
+            get_object_distance()
+            if stuck==True:   
+                phase = -1
+            if upside_down==True: 
+                phase = -2
+            elif distance < 4.0:  # GPS座標との距離 < m以内　　#スタック優先
                 phase = 4
-
+            #print(distance)
+            #print(direction)
+            #print(mag)
 
         elif phase == 4:
             print("phase4 : camera start")
@@ -143,12 +141,8 @@ def main():
             cone_detect()
             if cone_probability < 1:
                 phase = 5
-
-            
             if n > 5:
                 phase = 6
-                break
-            n = n+1
 
         elif phase == 5:
             print("phase5")
@@ -161,13 +155,6 @@ def main():
                     print("reached")
                     phase = 6
                     break
-                if object_distance < 30:
-                    phase = 6
-                    break
-                print(object_distance)
-                if time.time() - start2 > 60:
-                    phase = 3
-                    break
 #                 if cone_probability > 1: # detect cone probability
 #                     n += 1
 #                     phase = 4
@@ -175,10 +162,21 @@ def main():
         elif phase == 6:
             print("phase6 : Goal")
             time.sleep(10000)
-        
-        while ( (stuck_uss_Flag == 1 or stuck_GPS_Flag == 1) and phase >= 3):      # フラグ折り待ちループ
-            pass
-            
+#         elif phase==-1:
+#             print("phase-1 : stuck")
+#             if object_distance_Flag ==0:
+#                 phase = -1
+#             elif object_distance_Flag == 1:
+#                 phase = 3
+#                 object_distance_Flag = 0
+#         elif phase ==-2:
+#             print("phase-2 : upside down")
+#             if  upside_down_Flag == 0:
+#                 phase = -2
+#             elif upside_down_Flag == 1:
+#                 phase = 3
+#      
+
         time.sleep(0.1)
 
 
@@ -195,27 +193,21 @@ def Setup():
     GPIO.setup(LED1, GPIO.OUT)
     GPIO.setup(LED2, GPIO.OUT)
     GPIO.setup(LED3, GPIO.OUT)
-    GPIO.setup(TRIG, GPIO.OUT)          # Trigピン出力モード設定
-    GPIO.setup(ECHO, GPIO.IN)           # Echoピン入力モード設定
-    
+    GPIO.setup(trig_pin, GPIO.OUT)          # Trigピン出力モード設定
+    GPIO.setup(echo_pin, GPIO.IN)           # Echoピン入力モード設定
     
     servoMotor(90)
 
 
     with open(fileName, 'a') as f:
         writer = csv.writer(f)
-        writer.writerow(['MilliTime','Phase','AccX','AccY','AccZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ','LAT','LNG','ALT','Distance','Object Distance','Azimuth','Angle','Direction','Fall'])
+        writer.writerow(['MilliTime','Phase','AccX','AccY','AccZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ','LAT','LNG','ALT','Distance','Object_Distance','Azimuth','Angle','Direction','Fall'])
         
     getThread = threading.Thread(target=moveMotor_thread, args=())
     getThread.daemon = True
     getThread.setDaemon(True)
     getThread.start()
 
-    UssThread = threading.Thread(target=setUss_thread, args=())
-    UssThread.daemon = True
-    UssThread.setDaemon(True)
-    UssThread.start()
-    
     dataThread = threading.Thread(target=setData_thread, args=())
     dataThread.daemon = True
     dataThread.setDaemon(True)
@@ -228,8 +220,9 @@ def Setup():
 
 
     detector = dc.detector()
-    roi_img = cv2.imread("./library/roi1.png")
+    roi_img = cv2.imread("/home/karisora/FTE14/NiCs2024/library/roi_red_cone.png")
     
+    roi_img = cv2.cvtColor(roi_img, cv2.COLOR_BGR2RGB)
     detector.set_roi_img(roi_img)
 
     GPIO.output(LED2, HIGH)
@@ -259,56 +252,11 @@ def getBmpData():
     
     alt = alt + 60 # calibration
 
-def get_object_distance(timeout=0.01):  #超音波での障害物との距離計算関数 #0.003秒で約50cm
-    #Trigピンを10μsだけHIGHにして超音波の発信開始
-    GPIO.output(TRIG, GPIO.HIGH)
-    time.sleep(0.000010)
-    GPIO.output(TRIG, GPIO.LOW)
-    start_time=time.time()
-    while not GPIO.input(ECHO):
-        #if time.time() - start_time > timeout:
-            #return 100  
-        pass
-    t1 = time.time() # 超音波発信時刻（EchoピンがHIGHになった時刻）格納
-    while GPIO.input(ECHO):
-        if time.time() - start_time > timeout:
-            return 50
-    t2 = time.time() # 超音波受信時刻（EchoピンがLOWになった時刻）格納
-    return (t2 - t1) * SPEED_OF_SOUND / 2 # 時間差から対象物までの距離計算
-
-
-
-def detect_stuck_by_GPS(): #generation構文
-    global stuck_GPS_Flag #0:not stuck　1:stuck
-    while_Flag=True
-    t1=0.0
-
-    while True:
-        if while_Flag:
-            t1=time.time()
-            distance_buff= distance
-            while_Flag= False
-            yield
-        if time.time()-t1 < 10:
-            yield
-            continue
-        if abs(distance - distance_buff) < 1:
-            stuck_GPS_Flag = 1
-        while_Flag = True  
-
-# def detect_upside_down():
-#     global upside_down_Flag
-#     global acc
-#     if acc[1] > 0:
-#         upside_down_Flag=1
-#         print("Now Rover looks the sky;;")
-#         
 def flying(): #落下検知関数 :飛んでいるときはTrueを返し続ける
     #この関数は何回も繰り返されることを想定
     global maxAlt
     global minAlt
     
-
     if maxAlt < alt:
         maxAlt = alt
     if minAlt > alt:
@@ -324,6 +272,20 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     else:
         True
 
+def stuck_uss():
+    global stuck_uss_Flag
+    object_distance=[0.0, 0.0, 0.0, 0.0, 0.0]
+    for i in range(5):
+        object_distance[i]=object_distance       
+    if all( x <= 10 for x in object_distance):
+        stuck_uss_Flag=1
+
+
+def upside_down():
+    global upside_down_Flag
+    global acc
+    if acc[1] > 0:
+        upside_down_Flag=1
 
 def calibration():  # calibrate BMX raw data
     global calibBias
@@ -354,14 +316,14 @@ def calibration():  # calibrate BMX raw data
             print("calibration(): Complete!")
             GPIO.output(LED1, HIGH)
             complete = True
-            time.sleep(0.5)
+            time.sleep(1)
             calibBias[1] = (max[1] + min[1]) / 2
             calibBias[2] = (max[2] + min[2]) / 2
 
             calibRange[1] = (max[1] - min[1]) / 2
             calibRange[2] = (max[2] - min[2]) / 2
             GPIO.output(LED1, LOW)
-            time.sleep(0.5)
+            time.sleep(2)
 
 
 def calcdistance():  # 距離計算用関
@@ -402,34 +364,66 @@ def calcAzimuth():  # 方位角計算用関数
     elif mag[1] < 0:
         azimuth = -90 + azimuth
 
+def get_object_distance():  #超音波での障害物との距離計算関数
+    global object_distance
+    global distance_diff
+    global distance_Flag
+    global while_judge_distance
+    #Trigピンを10μsだけHIGHにして超音波の発信開始
+    GPIO.output(trig_pin, GPIO.HIGH)
+    time.sleep(0.000010)
+    GPIO.output(trig_pin, GPIO.LOW)
+
+
+    if while_judge_distance == 0:
+        while_judge_distance = 1
+        distance_diff[0] = distance
+        distance_time[0] = currentMilliTime()
+    elif while_judge_distance == 1:
+        distance_time[1] = currentMilliTime()
+        if distance_time[1] - distance_time[0] > 10 * 1000:
+            distance_diff[1] = distance
+            if distance_diff[1] - distance_diff[0] < 1:  # stack CanSat move only 1 meter while 10s
+                distance_Flag = 1
+
+    while GPIO.input(echo_pin) == GPIO.LOW:
+        t1 = time.time()
+    while GPIO.input(echo_pin) == GPIO.HIGH:
+        t2 = time.time()
+    object_distance = (t2 - t1) * speed_of_sound / 2 # 時間差から対象物までの距離計算
+    print(object_distance)
 
 def servoMotor(angle):
     assert 0 <= angle <= 180, '角度は0から180の間でなければなりません'
 
-    # 角度を500から2500のパルス幅にマッピングする
-    pulse_width = (angle / 180) * (2500 - 500) + 500
-    # パルス幅を設定してサーボを回転させる
-    servo.set_servo_pulsewidth(SERVO_PIN, pulse_width)
+    pulse_width = (angle / 180) * (2500 - 500) + 500 # 角度を500から2500のパルス幅にマッピングする
+    servo.set_servo_pulsewidth(SERVO_PIN, pulse_width) # パルス幅を設定してサーボを回転させる
 
-def LED_Checker(num):
-    for _ in range(num):
+def LED_Checker():
+    GPIO.output(LED1, LOW)
+    GPIO.output(LED2, LOW)
+    GPIO.output(LED3, LOW)
+    if amari[0] == 1:
         GPIO.output(LED1, HIGH)
-        time.sleep(0.1)
-        GPIO.output(LED1, LOW)
-        time.sleep(0.1)
+    if amari[1] == 1:
+        GPIO.output(LED2, HIGH)
+    if amari[2] == 1:
+        GPIO.output(LED3, HIGH)
+    
+        
+        
+        
 
 
 def GPS_thread():  # GPSモジュールを読み、GPSオブジェクトを更新する
     global lat
     global lng
     global gps_detect
-    global stuck_GPS_Flag
-    stuck_GPS_detection = detect_stuck_by_GPS()  #genetration 
 
     s = serial.Serial('/dev/serial0', 115200)
-#     s.readline()  # 最初の1行は中途半端なデーターが読めることがあるので、捨てる
+    s.readline()  # 最初の1行は中途半端なデーターが読めることがあるので、捨てる
     gps = MicropyGPS(9, 'dd')
-    
+
     while True:
         sentence = s.readline().decode('utf-8')  # GPSデーターを読み、文字列に変換する
 
@@ -442,15 +436,12 @@ def GPS_thread():  # GPSモジュールを読み、GPSオブジェクトを更�
         lat = gps.latitude[0]
         lng = gps.longitude[0]
 
-        if lat == 0.0:
+        if lat > 0:
+            gps_detect = 1
+        elif lat == 0.0:
             gps_detect = 0
-            print("None gnss value")
-            continue
-        gps_detect = 1
-        #stuck_GPS_Flag立てちゃうよ^^
-        stuck_GPS_detection.__next__() 
-    
-
+        # print(lat)
+        # print(lng)
             
       
 def cone_detect():
@@ -460,25 +451,10 @@ def cone_detect():
        
     
     detector.detect_cone()
-    cone_direction = 1 - detector.cone_direction #flip
+    cone_direction = detector.cone_direction
     cone_probability = detector.probability
-    print((cone_direction, cone_probability))
 
     
-def setUss_thread():
-    object_distance_list=[]
-    #Stuck_uss_Flag立てちゃうよ　＾＾
-    global stuck_uss_Flag
-    global object_distance
-    
-    while True:
-        object_distance=get_object_distance()
-        object_distance_list.append(object_distance)
-        if len(object_distance_list)>5:
-            object_distance_list.pop(0)   
-        if all( x <= OBJECT_DISTANCE for x in object_distance_list):
-            stuck_uss_Flag = 1
-        time.sleep(0.5)
 
 def setData_thread():
     while True:
@@ -487,7 +463,6 @@ def setData_thread():
         calcAzimuth()
         set_direction()
         calcdistance()
-
         with open(fileName, 'a', newline="") as f:
             writer = csv.writer(f)
             writer.writerow([currentMilliTime(), round(phase,1), acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[1], mag[1], mag[2], lat, lng, alt, distance, object_distance, azimuth, angle, direction, fall])
@@ -508,10 +483,10 @@ def moveMotor_thread():
     M4A_pwm = GPIO.PWM(M4A, frequency)
     M4B_pwm = GPIO.PWM(M4B, frequency)
 
-    M1A_pwm.start(0) # right tire pwm
+    M1A_pwm.start(0)
     M1B_pwm.start(0)
-    M4A_pwm.start(0) 
-    M4B_pwm.start(0) # left tire pwm
+    M4A_pwm.start(0)
+    M4B_pwm.start(0)
 
     while True:
         if direction == 360.0:  # stop
@@ -519,69 +494,48 @@ def moveMotor_thread():
             M1B_pwm.ChangeDutyCycle(0)
             M4A_pwm.ChangeDutyCycle(0)
             M4B_pwm.ChangeDutyCycle(0)
-        elif direction == 500.0:  # left 
-            M1A_pwm.ChangeDutyCycle(100)
+        elif direction == -360.0:  # forward
+            M1A_pwm.ChangeDutyCycle(100* diff_rot)
             M1B_pwm.ChangeDutyCycle(0)
-            M4A_pwm.ChangeDutyCycle(0)
+            M4A_pwm.ChangeDutyCycle(100)
             M4B_pwm.ChangeDutyCycle(0)
-        elif direction == 600.0:  # right 
+        elif direction == -400.0:  # rotate
+            M1A_pwm.ChangeDutyCycle(30* diff_rot)
+            M1B_pwm.ChangeDutyCycle(0)
+            M4A_pwm.ChangeDutyCycle(60)
+            M4B_pwm.ChangeDutyCycle(0)
+        elif direction == 500.0:  # left back
             M1A_pwm.ChangeDutyCycle(0)
-            M1B_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(30)
             M4A_pwm.ChangeDutyCycle(0)
-            M4B_pwm.ChangeDutyCycle(100)
-        elif direction == -360.0:  #forward
-            M1A_pwm.ChangeDutyCycle(100)
-            M1B_pwm.ChangeDutyCycle(0)
+            M4B_pwm.ChangeDutyCycle(10*diff_rot)
+        elif direction == 600.0:  # right back
+            M1A_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(10)
             M4A_pwm.ChangeDutyCycle(0)
-            M4B_pwm.ChangeDutyCycle(100 * diff_rot)
-        elif direction == -400.0:  # rotate  left
-            M1A_pwm.ChangeDutyCycle(100)
-            M1B_pwm.ChangeDutyCycle(0)
+            M4B_pwm.ChangeDutyCycle(30*diff_rot)
+        elif direction == 700: #back
+            M1A_pwm.ChangeDutyCycle(0)
+            M1B_pwm.ChangeDutyCycle(100)
             M4A_pwm.ChangeDutyCycle(0)
-            M4B_pwm.ChangeDutyCycle(30 * diff_rot) 
-        elif direction > 0.0 and direction <= 180.0:  # turn left
-            M1A_pwm.ChangeDutyCycle(100)
+            M4B_pwm.ChangeDutyCycle(100) 
+        elif direction > 0.0 and direction <= 180.0:  # left
+            M1A_pwm.ChangeDutyCycle((30 + MOTOR_COFFICIENT * 50) * diff_rot)
             M1B_pwm.ChangeDutyCycle(0)
-            M4A_pwm.ChangeDutyCycle(0)
-            M4B_pwm.ChangeDutyCycle(20 * diff_rot)
-        elif direction < 0.0 and direction >= -180.0:  # turn right
-            M1A_pwm.ChangeDutyCycle(20)
+            M4A_pwm.ChangeDutyCycle(10)
+            M4B_pwm.ChangeDutyCycle(0)
+        elif direction < 0.0 and direction >= -180.0:  # right
+            M1A_pwm.ChangeDutyCycle(10* diff_rot)
             M1B_pwm.ChangeDutyCycle(0)
-            M4A_pwm.ChangeDutyCycle(0)
-            M4B_pwm.ChangeDutyCycle(100 * diff_rot)
+            M4A_pwm.ChangeDutyCycle(30 + MOTOR_COFFICIENT * 50)
+            M4B_pwm.ChangeDutyCycle(0)
 
 
 def set_direction():  # -180<direction<180  #rover move to right while direction > 0
     global direction
     global phase
-    global stuck_uss_Flag
-    global stuck_GPS_Flag
+    global object_distance_Flag
     global upside_down_Flag
-    
-#         #フラグ処理を優先
-#     if upside_down_Flag == 1 and phase >= 3:
-#         direction = -360
-#         time.sleep(3)
-#         upside_down_Flag=0
-
-
-#     while gps_detect == 0: # if not GNSS is updated
-#         direction = 360
-#         continue
-
-    if (stuck_uss_Flag==1 or stuck_GPS_Flag==1) and phase >=3:
-        for _ in range(4):
-            direction = 500
-            time.sleep(0.3)
-            direction = 600
-            time.sleep(0.3)
-        direction = 90
-        time.sleep(2)
-        direction = -360
-        time.sleep(2)
-        stuck_uss_Flag=0
-        stuck_GPS_Flag=0
-
 
     if phase == 0:  # 投下
         direction = 360
@@ -602,7 +556,9 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
 
         direction = theta - azimuth
 
-        if abs(direction) < 5.0: # margin of the target angle
+        if abs(direction) < 8.0:
+            direction = -360.0
+        elif abs(direction) > 172.0:
             direction = -360.0
 
 
@@ -616,9 +572,25 @@ def set_direction():  # -180<direction<180  #rover move to right while direction
             direction = -360
         elif cone_direction < 0.3:
             direction = 180
-        
+
     elif phase == 6:
         direction = 360
+    elif phase == -1:
+        for _ in range(4):
+            direction = 500
+            time.sleep(0.3)
+            direction = 600
+            time.sleep(0.3)
+        direction = 90
+        time.sleep(2)
+        direction = -360
+        time.sleep(2)
+        stuck_uss_Flag=0
+        stuck_GPS_Flag=0
+    elif phase == -2:
+        direction = 700
+        time.sleep(3)
+        upside_down_Flag=0        
     
         
              
