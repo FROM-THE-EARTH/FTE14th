@@ -57,18 +57,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MDDIR_Pin GPIO_PIN_7
+#define MDDIR_GPIO_Port GPIOA
 #define MDMS3_Pin GPIO_PIN_0
-#define MDMS3_GPIO_Port GPIOF
-#define MDMS2_Pin GPIO_PIN_1
-#define MDMS2_GPIO_Port GPIOF
+#define MDMS3_GPIO_Port GPIOB
 #define MDMS1_Pin GPIO_PIN_8
 #define MDMS1_GPIO_Port GPIOA
-#define MDDIR_Pin GPIO_PIN_10
-#define MDDIR_GPIO_Port GPIOA
 #define MDEN_Pin GPIO_PIN_11
 #define MDEN_GPIO_Port GPIOA
 #define MDSTEP_Pin GPIO_PIN_12
 #define MDSTEP_GPIO_Port GPIOA
+#define MDMS2_Pin GPIO_PIN_6
+#define MDMS2_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

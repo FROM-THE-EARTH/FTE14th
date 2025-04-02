@@ -22,7 +22,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <string.h>
 #include "BNO055.h"
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,15 +47,24 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 
+TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
 
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+const uint8_t reset_buffer[] = "r\r\n";
+char angle_buffer[100];
+
 float Gyr_x;
 float Gyr_y;
 float Gyr_z;
+
+float pre_z;
+float now_z;
+int bnoemergency = 0;
 
 int stepState = 0; //0:reset 1:set
 uint16_t stepInterval;
@@ -65,6 +76,18 @@ float tangle = 0;
 int mdir = 1;
 int ms = 1;
 int tim7init = 0;
+int stopState = 0;
+
+uint8_t buffer[30];
+char data[30];
+int size = 1;
+int datapos = 0;
+char num_char[30];
+
+float cangle = 0;
+
+
+int state  =0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,6 +97,8 @@ static void MX_I2C1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_TIM4_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -88,6 +113,9 @@ void A4988_Initialize(){
 }
 
 void A4988_STEP(uint16_t interval){
+	if(stopState == 0){
+		return ;
+	}
 	if(stepState == 0){
 		if(stepInterval != interval - 1){
 			stepInterval = interval - 1;
@@ -105,34 +133,39 @@ void A4988_STEP(uint16_t interval){
 }
 
 
-void A4988_MSCHANGE(uint8_t MS){//1,2,4,8,16のみ
-	if((MS & 0x01011) > 0 ){
-		HAL_GPIO_WritePin(MDMS1_GPIO_Port,MDMS1_Pin,GPIO_PIN_SET);
-	}else{
-		HAL_GPIO_WritePin(MDMS1_GPIO_Port,MDMS1_Pin,GPIO_PIN_RESET);
-	}
-	if((MS & 0x00111) > 0){
-		HAL_GPIO_WritePin(MDMS2_GPIO_Port,MDMS2_Pin,GPIO_PIN_SET);
-	}else{
-		HAL_GPIO_WritePin(MDMS2_GPIO_Port,MDMS2_Pin,GPIO_PIN_RESET);
-	}
-	if((MS & 0x00001) > 0){
-		HAL_GPIO_WritePin(MDMS3_GPIO_Port,MDMS3_Pin,GPIO_PIN_SET);
-	}else{
-		HAL_GPIO_WritePin(MDMS3_GPIO_Port,MDMS3_Pin,GPIO_PIN_RESET);
-	}
-
+void A4988_MSCHANGE(uint8_t MS) { // 1:0x00, 2:0x01, 4:0x02, 8:0x03, 16:0x07 のみ
+    HAL_GPIO_WritePin(MDMS1_GPIO_Port, MDMS1_Pin, (MS & 0b001) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(MDMS2_GPIO_Port, MDMS2_Pin, (MS & 0b010) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(MDMS3_GPIO_Port, MDMS3_Pin, (MS & 0b100) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-    if(htim == &htim6){
+	if(htim == &htim4){
         BNO055_ReadGyr(&Gyr_x, &Gyr_y, &Gyr_z);
         //printf("%f , %f , %f\r\n",Gyr_x,Gyr_y,Gyr_z); // @suppress("Float formatting support")
-        tangle += Gyr_z * 0.01;
-
+        if(Gyr_z == now_z){
+        	bnoemergency++;
+        }else{
+        	bnoemergency = 0;
+        }
+        if(bnoemergency == 10){
+        	HAL_UART_Transmit(&huart1,reset_buffer,sizeof(reset_buffer),0xFFFF);
+        	HAL_NVIC_SystemReset();
+        	bnoemergency = 0;
+        }
+        pre_z = now_z;
+        now_z = Gyr_z;
+        tangle += (now_z + Gyr_z) * 0.01 * 0.5;
+        //printf("%f\r\n",tangle);
+	}
+    if(htim == &htim6){
         float diffangle = tangle - mangle;
+        if((diffangle < (onepulse_motorangle/ms)*5) && (diffangle > -(onepulse_motorangle/ms)*5) ){
+        	diffangle = 0;
+        }
         int pulse = diffangle / (onepulse_motorangle / ms);
-        printf("%d\r\n",pulse);
+        //printf("%f\r\n",diffangle);
 
         if (pulse < 0) {
             mdir = -1;
@@ -145,26 +178,65 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
         if (pulse > 0) {
             mInterval = 100 / pulse;
+            stopState = 1;
         } else {
             mInterval = 100; // ゼロ除算防止
+            stopState = 0;
         }
-        if(mInterval < 100){
-        	mInterval = 100;
+        if(mInterval < 34){
+        	mInterval = 34;
         }
+
 
         if (tim7init == 0) {
             HAL_TIM_Base_Start_IT(&htim7);
             tim7init = 1;
         }
-        printf("%f,%f\r\n",tangle,mangle);
+        //printf("%f,%f\r\n",tangle,mangle);
     }
 
     if(htim == &htim7){
-    	printf("tim7");
+    	//printf("tim7");
         A4988_STEP(mInterval);
     }
 }
 
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	//printf("receive\r\n");
+	//printf("%d\r\n",buffer[0]);
+
+	if(buffer[0] == 13){
+		//printf("ok\r\n");
+		if(data[0] == 97){
+			for(int i=0;i<datapos-1;i++){
+				num_char[i] = data[i+1];
+			}
+			num_char[datapos-1] = '\0';
+			cangle = strtof(num_char, NULL);
+			mangle = cangle;
+			//printf("%f\r\n",cangle);
+		}
+		for(int i =0;i < datapos;i++){
+			//printf("%d\r\n",data[i]);
+			//printf("i:%d,data:%d\r\n",i,data[i]);
+
+			data[i] = 0;
+		}
+		datapos = -1;
+	}else{
+		data[datapos] = buffer[0];
+		//printf("%d\r\n",data[datapos]);
+		datapos++;
+	}
+	HAL_UART_Receive_IT(&huart1, buffer, 1);
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+	printf("uart_error\r\n");
+	HAL_UART_Abort(huart);
+	HAL_UART_Receive_IT(&huart1, buffer, size);
+}
 
 
 int _write(int file, char *ptr, int len)
@@ -208,6 +280,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM7_Init();
   MX_TIM6_Init();
+  MX_TIM4_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   if(BNO055_Initialize_Fusion() == false){
     	  printf("false");
@@ -215,8 +289,11 @@ int main(void)
     	  printf("Ok");
       }
   HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim4);
   A4988_Initialize();
-  //A4988_MSCHANGE(1);
+  HAL_UART_Transmit(&huart1,reset_buffer,sizeof(reset_buffer),0xFFFF);
+  HAL_UART_Receive_IT(&huart1, buffer, 1);
+  //A4988_MSCHANGE(0x07);
   //HAL_GPIO_WritePin(MDDIR_GPIO_Port, MDDIR_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
@@ -234,7 +311,16 @@ int main(void)
 //	  //HAL_GPIO_TogglePin(MDDIR_GPIO_Port, MDDIR_Pin);
 //	  HAL_Delay(200);
 //	  printf("HEllo\r\n");
-
+	  sprintf(angle_buffer, "a%f\r\n", tangle);
+	  HAL_UART_Transmit(&huart1, (uint8_t*)angle_buffer, strlen(angle_buffer), 0xFFFF);
+//	  printf("a:%f\r\n",tangle);
+//	  if(state == 100){
+//		  printf("reset\r\n");
+//		  HAL_NVIC_SystemReset();
+//	  }else{
+//		  state++;
+//	  }
+	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -334,6 +420,51 @@ static void MX_I2C1_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 7999;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 99;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
   * @brief TIM6 Initialization Function
   * @param None
   * @retval None
@@ -411,6 +542,54 @@ static void MX_TIM7_Init(void)
 }
 
 /**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 9600;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -470,29 +649,28 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, MDMS3_Pin|MDMS2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, MDDIR_Pin|MDMS1_Pin|MDEN_Pin|MDSTEP_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, MDMS1_Pin|MDDIR_Pin|MDEN_Pin|MDSTEP_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, MDMS3_Pin|MDMS2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : MDDIR_Pin MDMS1_Pin MDEN_Pin MDSTEP_Pin */
+  GPIO_InitStruct.Pin = MDDIR_Pin|MDMS1_Pin|MDEN_Pin|MDSTEP_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : MDMS3_Pin MDMS2_Pin */
   GPIO_InitStruct.Pin = MDMS3_Pin|MDMS2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : MDMS1_Pin MDDIR_Pin MDEN_Pin MDSTEP_Pin */
-  GPIO_InitStruct.Pin = MDMS1_Pin|MDDIR_Pin|MDEN_Pin|MDSTEP_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -513,6 +691,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+	  printf("Error\r\n");
   }
   /* USER CODE END Error_Handler_Debug */
 }
